@@ -20,13 +20,14 @@ private:
         return messages;
     }
 
-    std::pair<int, float> parseSubjectAndValue(const std::string& s) {
-    std::regex re(R"(\{'subject_id':\s*(\d+),\s*'value':\s*(\d+)\})");
+std::pair<int, double> parseSubjectAndValue(const std::string& s) {
+    // Match: {'subject_id': 32, 'value': 624.45}
+    std::regex re(R"(\{'subject_id':\s*(\d+),\s*'value':\s*([0-9]+(?:\.[0-9]+)?)\})");
     std::smatch match;
 
     if (std::regex_search(s, match, re)) {
         int subject_id = std::stoi(match[1]);
-        int value      = std::stoi(match[2]);
+        double value   = std::stod(match[2]);
         return {subject_id, value};
     } else {
         throw std::runtime_error("Failed to parse input string");
