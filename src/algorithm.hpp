@@ -1,6 +1,9 @@
 #ifndef ALGORITHM_HPP
 #define ALGORITHM_HPP
 
+#include <iostream>
+#include <string>
+
 struct Sensor {
     float value = 0.0f;
     const short subject_id;
