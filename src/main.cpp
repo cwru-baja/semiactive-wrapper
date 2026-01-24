@@ -2,6 +2,7 @@
 #include <vector>
 #include <thread>
 #include "WheelWrapper.hpp"
+#include "SensorPrint.hpp"
 #include <zmq.hpp>
 
 int main() {
@@ -14,6 +15,8 @@ int main() {
     WheelWrapper bl(1002, "RL_Wheel", "cwrubaja.suspension.bl", zmq_ctx);
     WheelWrapper br(1003, "RR_Wheel", "cwrubaja.suspension.br", zmq_ctx);
 
+    SensorPrint sp(zmq_ctx);
+
     // launch the threads asynchronously
     std::vector<std::thread> threads;
 
@@ -22,6 +25,9 @@ int main() {
     threads.emplace_back([&fr](){ fr.run(); });
     threads.emplace_back([&bl](){ bl.run(); });
     threads.emplace_back([&br](){ br.run(); });
+
+    // print sensors
+    threads.emplace_back([&sp](){ sp.run(); });
 
     // join threads (this will block main forever, as intended)
     for (auto& t : threads) {

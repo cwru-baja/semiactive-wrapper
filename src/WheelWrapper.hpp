@@ -60,10 +60,7 @@ private:
     // Helpers: ZMQ
     bool updateSensorsZMQ() {
         // get messages from zmq
-        auto msgs = getAllUnreadZMQMessages(socket_in);
-        if (verbose && !msgs.empty()) {
-            std::cout << "[" << unique_name << "] Received " << msgs.size() << " messages." << std::endl;
-        }
+        // auto msgs = getAllUnreadZMQMessages(socket_in);
         sensors.demoSensor.value = 12.5f; // dummy value for now
         return true;
     }
