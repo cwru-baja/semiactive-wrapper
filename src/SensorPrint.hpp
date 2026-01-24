@@ -20,7 +20,7 @@ private:
         return messages;
     }
 
-    std::pair<int, int> parseSubjectAndValue(const std::string& s) {
+    std::pair<int, float> parseSubjectAndValue(const std::string& s) {
     std::regex re(R"(\{'subject_id':\s*(\d+),\s*'value':\s*(\d+)\})");
     std::smatch match;
 
