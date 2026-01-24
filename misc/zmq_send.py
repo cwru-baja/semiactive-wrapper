@@ -1,17 +1,15 @@
-#currently intended to use the venv cyphal-env
-#intended to print the output of pycyphal
+#debug program for sending random zmq messages to a subscribed socket
 import zmq
 
 def main() -> None:
-    context = zmq.Context()
-    receiver = context.socket(zmq.SUB)
-    receiver.setsockopt_string(zmq.SUBSCRIBE, "")
-    receiver.connect("ipc:///tmp/cyphal_out")
-    
+    context: zmq.Context = zmq.Context()
+    socket: zmq.Socket = context.socket(zmq.PUB)
+    socket.bind("ipc:///tmp/cyphal_out")
     while True:
-        msg = receiver.recv()
-        print(msg)
-        
+        message = input("message to send:")
+        socket.send_string(message)
+
+
 
 if __name__ == "__main__":
     main()
