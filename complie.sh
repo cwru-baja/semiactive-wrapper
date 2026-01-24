@@ -9,6 +9,13 @@ echo "Compiling Suspension Control System..."
 INCLUDE_PATHS="-I/opt/homebrew/include -I/usr/local/include"
 LIB_PATHS="-L/opt/homebrew/lib -L/usr/local/lib"
 
+# see if /build exists
+if [ -d "$DIR" ]; then
+    :
+else
+    mkdir /build
+fi
+
 # Compile and link
 c++ -std=c++17 \
     src/*.cpp \
