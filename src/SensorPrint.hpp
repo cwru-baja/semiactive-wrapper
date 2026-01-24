@@ -38,6 +38,20 @@ std::pair<int, double> parseSubjectAndValue(const std::string& s) {
     }
 }
 
+    void updateSensorsFromZMQ() {
+        // get messages from zmq
+        auto msgs = getAllUnreadZMQMessages(socket_in);
+        if (!msgs.empty()) {
+            std::cout << "----------------------" << std::endl;
+            for (const auto& msg : msgs) {
+                std::cout << msg << std::endl;
+                auto [id, val] = parseSubjectAndValue(msg);
+                sensors.getAt(id).value = val;
+            }
+
+        }
+    }
+
 public:
     SensorPrint(zmq::context_t& zmq_cxt) {
         this->zmq_context.swap(zmq_cxt);
@@ -50,19 +64,13 @@ public:
     void run() {
         try {
             while (true) {
-                // get messages from zmq
-                auto msgs = getAllUnreadZMQMessages(socket_in);
-                if (!msgs.empty()) {
-                    std::cout << "----------------------" << std::endl;
-                    for (const auto& msg : msgs) {
-                        std::cout << msg << std::endl;
-                        auto [id, val] = parseSubjectAndValue(msg);
-                        sensors.getAt(id).value = val;
-                    }
-                    std::cout << "Sensor '" << sensors.getAt(1).name << "' Reading: " << sensors.getAt(1).value << std::endl;
-                    std::cout << "Sensor '" << sensors.getAt(2).name << "' Reading: " << sensors.getAt(2).value << std::endl;
-                    std::cout << "----------------------" << std::endl;
-                }
+
+                updateSensorsFromZMQ();
+                
+                std::cout << "Sensor [" << 1 << "] '" << sensors.getAt(1).name << "' Reading: " << sensors.getAt(1).value << std::endl;
+                std::cout << "Sensor [" << 2 << "] '" << sensors.getAt(2).name << "' Reading: " << sensors.getAt(2).value << std::endl;
+                std::cout << "----------------------" << std::endl;
+
                 usleep(1000000);
             }
         } catch (const std::exception& e) {
