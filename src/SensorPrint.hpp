@@ -31,10 +31,11 @@ public:
                 // get messages from zmq
                 auto msgs = getAllUnreadZMQMessages(socket_in);
                 if (!msgs.empty()) {
+                    std::cout << msgs.size() << "----------------------" << std::endl;
                     for (const auto& msg : msgs) {
                         std::cout << msg << std::endl;
                     }
-                    std::cout << msgs.size() << " messages." << std::endl;
+                    std::cout << msgs.size() << "----------------------" << std::endl;
                 }
                 usleep(100);
             }
