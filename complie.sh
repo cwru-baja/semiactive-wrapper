@@ -13,7 +13,7 @@ LIB_PATHS="-L/opt/homebrew/lib -L/usr/local/lib"
 if [ -d "$DIR" ]; then
     :
 else
-    mkdir /build
+    mkdir build
 fi
 
 # Compile and link
