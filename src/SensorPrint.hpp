@@ -1,6 +1,8 @@
 #include <iostream>
 #include <sys/time.h>
 #include <unistd.h>
+#include <string>
+#include <regex>
 
 #include <zmq.hpp>
 
@@ -33,7 +35,21 @@ public:
                 if (!msgs.empty()) {
                     std::cout << msgs.size() << "----------------------" << std::endl;
                     for (const auto& msg : msgs) {
-                        std::cout << msg << std::endl;
+                        int subject_id = 0;
+                        int value = 0;
+
+                        std::regex re(R"(\{'subject_id':\s*(\d+),\s*'value':\s*(\d+)\})");
+                        std::smatch match;
+
+                        if (std::regex_search(msg, match, re)) {
+                            subject_id = std::stoi(match[1]);
+                            value      = std::stoi(match[2]);
+
+                            std::cout << "subject_id = " << subject_id << "\n";
+                            std::cout << "value      = " << value << "\n";
+                        } else {
+                            std::cout << "Failed to parse string\n";
+                        }
                     }
                     std::cout << msgs.size() << "----------------------" << std::endl;
                 }
