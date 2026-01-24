@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Make this script executable with: chmod u+x build.sh
+
+echo "Compiling Suspension Control System..."
+
+# Homebrew paths (works on both Intel & Apple Silicon)
+# brew install zeromq cppzmq
+INCLUDE_PATHS="-I/opt/homebrew/include -I/usr/local/include"
+LIB_PATHS="-L/opt/homebrew/lib -L/usr/local/lib"
+
+# Compile and link
+c++ -std=c++17 \
+    main.cpp algorithm.cpp \
+    $INCLUDE_PATHS \
+    $LIB_PATHS \
+    -lzmq \
+    -pthread \
+    -o SemiActiveWrapper
+
+# Check if the compilation was successful
+if [ $? -eq 0 ]; then
+    echo "Build complete. Running..."
+    echo "-----------------------------"
+    ./SemiActiveWrapper
+else
+    echo "Build failed. Please check for errors above."
+fi
