@@ -40,6 +40,8 @@ public:
         this->socket_in = zmq::socket_t(zmq_context, zmq::socket_type::sub);
         socket_in.set(zmq::sockopt::subscribe, "");
         socket_in.connect("ipc:///tmp/cyphal_out"); // zmq inproc for testing
+
+        std::cout << "Transcribing sensor readings..." << std::endl;
     }
     void run() {
         try {
@@ -51,8 +53,7 @@ public:
                     for (const auto& msg : msgs) {
                         std::cout << msg << std::endl;
                         auto [id, val] = parseSubjectAndValue(msg);
-                        std::cout << "ID = " << id << "\n";
-                        std::cout << "Value = " << val << "\n";
+                        std::cout << "Sensor ID = " << id << " Value = " << val << "\n";
                     }
                     std::cout << "----------------------" << std::endl;
                 }

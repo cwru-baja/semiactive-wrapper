@@ -8,7 +8,7 @@ def main() -> None:
     socket: zmq.Socket = context.socket(zmq.PUB)
     socket.bind("ipc:///tmp/cyphal_out")
     while True:
-        message = "{'subject_id': 0001, 'value': 32}"
+        message = "{" + f"'subject_id': {random.randint(0, 1000)}", f"'value': {random.randrange(0.01, 100, .01)}" + "}"
         socket.send_string(message)
         time.sleep(.5)
 
