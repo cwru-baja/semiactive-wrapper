@@ -10,7 +10,7 @@ int main() {
     zmq::context_t zmq_ctx(1);
 
     // create the 4 wheel controllers
-    WheelWrapper fl(1000, "FL_Wheel", "cwrubaja.suspension.fl", zmq_ctx, true);
+    WheelWrapper fl(1000, "FL_Wheel", "cwrubaja.suspension.fl", zmq_ctx);
     WheelWrapper fr(1001, "FR_Wheel", "cwrubaja.suspension.fr", zmq_ctx);
     WheelWrapper bl(1002, "RL_Wheel", "cwrubaja.suspension.bl", zmq_ctx);
     WheelWrapper br(1003, "RR_Wheel", "cwrubaja.suspension.br", zmq_ctx);
