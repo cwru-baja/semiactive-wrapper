@@ -20,6 +20,19 @@ private:
         return messages;
     }
 
+    std::pair<int, int> parseSubjectAndValue(const std::string& s) {
+    std::regex re(R"(\{'subject_id':\s*(\d+),\s*'value':\s*(\d+)\})");
+    std::smatch match;
+
+    if (std::regex_search(s, match, re)) {
+        int subject_id = std::stoi(match[1]);
+        int value      = std::stoi(match[2]);
+        return {subject_id, value};
+    } else {
+        throw std::runtime_error("Failed to parse input string");
+    }
+}
+
 public:
     SensorPrint(zmq::context_t& zmq_cxt) {
         this->zmq_context.swap(zmq_cxt);
@@ -33,25 +46,14 @@ public:
                 // get messages from zmq
                 auto msgs = getAllUnreadZMQMessages(socket_in);
                 if (!msgs.empty()) {
-                    std::cout << msgs.size() << "----------------------" << std::endl;
+                    std::cout << "----------------------" << std::endl;
                     for (const auto& msg : msgs) {
-                        int subject_id = 0;
-                        int value = 0;
-
-                        std::regex re(R"(\{'subject_id':\s*(\d+),\s*'value':\s*(\d+)\})");
-                        std::smatch match;
-
-                        if (std::regex_search(msg, match, re)) {
-                            subject_id = std::stoi(match[1]);
-                            value      = std::stoi(match[2]);
-
-                            std::cout << "subject_id = " << subject_id << "\n";
-                            std::cout << "value      = " << value << "\n";
-                        } else {
-                            std::cout << "Failed to parse string\n";
-                        }
+                        std::cout << msg << std::endl;
+                        auto [id, val] = parseSubjectAndValue(msg);
+                        std::cout << "ID = " << id << "\n";
+                        std::cout << "Value = " << val << "\n";
                     }
-                    std::cout << msgs.size() << "----------------------" << std::endl;
+                    std::cout << "----------------------" << std::endl;
                 }
                 usleep(100);
             }
