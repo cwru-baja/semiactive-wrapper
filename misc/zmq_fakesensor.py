@@ -10,7 +10,7 @@ def main() -> None:
     while True:
         message = "{" + f"'subject_id': {random.randint(0, 1000)}", f"'value': {random.randint(1, 10000) / 100.0}" + "}"
         socket.send_string(message)
-        time.sleep(.5)
+        time.sleep(.1)
 
 
 

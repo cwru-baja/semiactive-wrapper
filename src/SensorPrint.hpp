@@ -57,7 +57,7 @@ public:
                     }
                     std::cout << "----------------------" << std::endl;
                 }
-                usleep(100);
+                usleep(1000000);
             }
         } catch (const std::exception& e) {
             printf(e.what());
