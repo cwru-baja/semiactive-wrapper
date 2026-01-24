@@ -4,7 +4,7 @@
 struct Sensor {
     float value = 0.0f;
     const short subject_id;
-    const std::string name = "";
+    const std::string name;
 
     // constructors
     Sensor(short sbj_id, std::string sensor_name) : subject_id(sbj_id), value(0.0f), name(sensor_name) {}
