@@ -6,7 +6,7 @@ def main() -> None:
     context = zmq.Context()
     receiver = context.socket(zmq.SUB)
     receiver.setsockopt_string(zmq.SUBSCRIBE, "")
-    receiver.connect("ipc:///tmp/cyphal_in")
+    receiver.connect("ipc:///tmp/cyphal_out")
     
     while True:
         msg = receiver.recv()
