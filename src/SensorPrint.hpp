@@ -6,7 +6,6 @@
 
 class SensorPrint {
 private:
-    std::string unique_name;
     zmq::context_t zmq_context;
     zmq::socket_t socket_in;
 
@@ -32,7 +31,10 @@ public:
                 // get messages from zmq
                 auto msgs = getAllUnreadZMQMessages(socket_in);
                 if (!msgs.empty()) {
-                    std::cout << "[" << unique_name << "] Received " << msgs.size() << " messages." << std::endl;
+                    for (const auto& msg : msgs) {
+                        std::cout << msg << std::endl;
+                    }
+                    std::cout << msgs.size() << " messages." << std::endl;
                 }
                 usleep(100);
             }
