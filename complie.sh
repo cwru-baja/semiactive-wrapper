@@ -9,7 +9,7 @@ echo "Compiling Suspension Control System..."
 INCLUDE_PATHS="-I/opt/homebrew/include -I/usr/local/include"
 LIB_PATHS="-L/opt/homebrew/lib -L/usr/local/lib"
 
-# see if /build exists
+# see if ./build exists
 if [ -d "$DIR" ]; then
     :
 else

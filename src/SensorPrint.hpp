@@ -4,12 +4,16 @@
 #include <string>
 #include <regex>
 
+#include "algorithm.hpp"
+
 #include <zmq.hpp>
 
 class SensorPrint {
 private:
     zmq::context_t zmq_context;
     zmq::socket_t socket_in;
+
+    Sensors sensors;
 
     std::vector<std::string> getAllUnreadZMQMessages(zmq::socket_t& subSocket) {
         std::vector<std::string> messages;
@@ -53,8 +57,10 @@ public:
                     for (const auto& msg : msgs) {
                         std::cout << msg << std::endl;
                         auto [id, val] = parseSubjectAndValue(msg);
-                        std::cout << "Sensor ID = " << id << " Value = " << val << "\n";
+                        sensors.getAt(id).value = val;
                     }
+                    std::cout << "Sensor '" << sensors.getAt(1).name << "' Reading: " << sensors.getAt(1).value << std::endl;
+                    std::cout << "Sensor '" << sensors.getAt(2).name << "' Reading: " << sensors.getAt(2).value << std::endl;
                     std::cout << "----------------------" << std::endl;
                 }
                 usleep(1000000);

@@ -4,17 +4,23 @@
 struct Sensor {
     float value = 0.0f;
     const short subject_id;
+    const std::string name = "";
 
     // constructors
-    constexpr Sensor(short sbj_id)                   : subject_id(sbj_id), value(0.0f)       {}
-    constexpr Sensor(short sbj_id, float init_value) : subject_id(sbj_id), value(init_value) {}
+    Sensor(short sbj_id, std::string sensor_name) : subject_id(sbj_id), value(0.0f), name(sensor_name) {}
 };
 
 struct Sensors {
-    Sensor demoSensor{1};
-    Sensor secondSensor{2};
-};
+    Sensor demoSensor   {1, "Demo"};
+    Sensor secondSensor {2, "Second"};
 
+    Sensor& getAt(int subject_id) {
+
+             if (subject_id == 1) {return demoSensor;   }
+        else if (subject_id == 2) {return secondSensor; }
+        else {return demoSensor;};
+    }
+};
 
 
 struct Output {
