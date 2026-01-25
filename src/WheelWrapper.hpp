@@ -128,6 +128,8 @@ public:
                         throw std::runtime_error("Max dumps reached");
                 }
 
+                std::cout << sensors.demoSensor.value << std::endl;
+
                 // Verbose Printing
                 if (loop_count % 100 == 0 && loop_count > 0 && verbose) {
                     // Simple lock for printing could be added here

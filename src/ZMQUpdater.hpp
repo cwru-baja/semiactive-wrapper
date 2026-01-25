@@ -46,25 +46,17 @@ public:
         }
     }
 
-    void updateSensorsFromZMQ() {
-        // get messages from zmq
-        auto msgs = getAllUnreadZMQMessages(socket_in);
-        if (!msgs.empty()) {
-            std::cout << "----------------------" << std::endl;
-            for (const auto& msg : msgs) {
-                std::cout << msg << std::endl;
-                auto [id, val] = parseSubjectAndValue(msg);
-                sensors.getAt(id).value = val;
-            }
-
-        }
-    }
-
     void run() {
         try {
             while (true) {
-
-                updateSensorsFromZMQ();
+                
+                auto msgs = getAllUnreadZMQMessages(socket_in);
+                if (!msgs.empty()) {
+                    for (const auto& msg : msgs) {
+                        auto [id, val] = parseSubjectAndValue(msg);
+                        sensors.getAt(id).value = val;
+                    }
+                }
 
                 usleep(100);
             }
