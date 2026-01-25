@@ -3,6 +3,7 @@
 #include <thread>
 #include "WheelWrapper.hpp"
 #include "SensorPrint.hpp"
+#include "ZMQUpdater.hpp"
 #include <zmq.hpp>
 
 int main() {
@@ -19,6 +20,8 @@ int main() {
 
     SensorPrint sp(sensors);
 
+    ZMQUpdater zu(sensors, output);
+
     // launch the threads asynchronously
     std::vector<std::thread> threads;
 
@@ -26,6 +29,8 @@ int main() {
     threads.emplace_back([&fl](){ fl.run(); });
     threads.emplace_back([&fr](){ fr.run(); });
     threads.emplace_back([&bl](){ bl.run(); });
+    threads.emplace_back([&zu](){ zu.run(); });
+
     threads.emplace_back([&br](){ br.run(); });
 
     // print sensors
