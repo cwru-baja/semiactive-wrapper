@@ -18,15 +18,13 @@ private:
     int subject_id;
     std::string unique_name;
     std::string zmq_type;
-    zmq::context_t zmq_context;
-    zmq::socket_t socket_in;
 
     bool verbose = false;
 
     
     // State
-    Sensors sensors;
-    Output output;
+    ZMQSensorData& sensors;
+    ZMQOutput& output;
     
     // config
     const int UPDATE_HZ = 100;
@@ -45,32 +43,6 @@ private:
         timeval tv;
         gettimeofday(&tv, NULL);
         return tv.tv_sec * 1000L + tv.tv_usec / 1000;
-    }
-
-    // Helper: ZMQ Message Retrieval
-    std::vector<std::string> getAllUnreadZMQMessages(zmq::socket_t& subSocket) {
-        std::vector<std::string> messages;
-        zmq::message_t msg;
-        while (subSocket.recv(msg, zmq::recv_flags::dontwait)) {
-            messages.push_back(msg.to_string());
-        }
-        return messages;
-    }
-
-    // Helpers: ZMQ
-    bool updateSensorsZMQ() {
-        // get messages from zmq
-        // auto msgs = getAllUnreadZMQMessages(socket_in);
-        sensors.demoSensor.value = 12.5f; // dummy value for now
-        return true;
-    }
-
-    bool updateOutputZMQ() {
-        // In real code: zmq_send(socket, output...)
-        // evan said to use this: {"priority": 2, "current": {"ampere": 67.0}, "subject_id": 127}'
-        // so {"priority": 2, "current": {"ampere": output.setpoint }, "subject_id": subject_id}'
-        // im not sure where unique_name goes tho
-        return true;
     }
 
     // the frame logic
@@ -114,17 +86,12 @@ private:
     }
 
 public:
-    WheelWrapper(int wheel_id, std::string name, std::string type, zmq::context_t& zmq_cxt, bool verb=false) {
+    WheelWrapper(int wheel_id, std::string name, std::string type, ZMQSensorData& sensors_object, ZMQOutput& output_object, bool verb=false)
+        : sensors(sensors_object), output(output_object) {
         subject_id = wheel_id;
         unique_name = name;
         zmq_type = type;
         verbose = verb;
-
-        this->zmq_context.swap(zmq_cxt);
-
-        this->socket_in = zmq::socket_t(zmq_context, zmq::socket_type::sub);
-        socket_in.set(zmq::sockopt::subscribe, "");
-        socket_in.connect("ipc:///tmp/cyphal_out"); // zmq inproc for testing
         }
 
     // The main loop for this specific wheel
@@ -135,10 +102,6 @@ public:
         try {
             while (true) {
                 long start = nowMillis();
-
-                // update zmq
-                updateSensorsZMQ();
-                updateOutputZMQ();
 
                 // Run the frame race
                 int dur = frame([&]() {
@@ -171,7 +134,6 @@ public:
                     std::cout << "--- " << unique_name << " Stats ---" << std::endl;
                     std::cout << " Avg Algo: " << std::fixed << std::setprecision(2) << avg_algo_time << " ms" << std::endl;
                     std::cout << " Avg Frame: " << std::fixed << std::setprecision(2) << avg_frame_time << " ms" << std::endl;
-                    std::cout << " Setpoint: " << output.setpoint << std::endl;
                     std::cout << " Frame Offset: " << std::fixed << std::setprecision(2) << frame_offset_ms << " ms" << std::endl;
                     std::cout << " Update Dumps: " << update_dumps << std::endl;
                     std::cout << "-----------------------" << std::endl;
@@ -180,7 +142,6 @@ public:
         } catch (const std::exception& e) {
             std::cerr << "[" << unique_name << "] CRITICAL FAILURE: " << e.what() << std::endl;
             emergency(output);
-            updateOutputZMQ();
         }
     }
 };

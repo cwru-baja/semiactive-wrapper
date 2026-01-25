@@ -15,13 +15,13 @@ struct Sensor {
     Sensor(short sbj_id, std::string sensor_name) : subject_id(sbj_id), value(0.0f), name(sensor_name) {}
 };
 
-struct Sensors {
+struct ZMQSensorData {
     Sensor demoSensor   {1, "Demo"};
     Sensor secondSensor {2, "Second"};
 
     std::unordered_map<int, Sensor*> sensorMapping;
 
-    Sensors() {
+    ZMQSensorData() {
         sensorMapping[1] = &demoSensor;
         sensorMapping[2] = &secondSensor;
     }
@@ -32,19 +32,21 @@ struct Sensors {
         } catch(const std::exception& e) {
             return demoSensor;
         }
-        
-        
     }
 };
 
 
-struct Output {
-    float setpoint = 0.0f;
+struct ZMQOutput {
+    std::unordered_map<int, double> subject_id_setpoints_map;
+
+    void setSetpoint(int subject_id, double setpoint) {
+        subject_id_setpoints_map[subject_id] = setpoint;
+    }
 };
 
 // Functions now accept references to the specific wheel's data
-void setup(Sensors& s, Output& o);
-void update(Sensors& s, Output& o);
-void emergency(Output& o);
+void setup(ZMQSensorData& s, ZMQOutput& o);
+void update(ZMQSensorData& s, ZMQOutput& o);
+void emergency(ZMQOutput& o);
 
 #endif

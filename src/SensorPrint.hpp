@@ -10,65 +10,24 @@
 
 class SensorPrint {
 private:
-    zmq::context_t zmq_context;
-    zmq::socket_t socket_in;
 
-    Sensors sensors;
+    ZMQSensorData& sensors;
 
-    std::vector<std::string> getAllUnreadZMQMessages(zmq::socket_t& subSocket) {
-        std::vector<std::string> messages;
-        zmq::message_t msg;
-        while (subSocket.recv(msg, zmq::recv_flags::dontwait)) {
-            messages.push_back(msg.to_string());
-        }
-        return messages;
-    }
-
-std::pair<int, double> parseSubjectAndValue(const std::string& s) {
-    // Match: {'subject_id': 32, 'value': 624.45}
-    std::regex re(R"(\{'subject_id':\s*(\d+),\s*'value':\s*([0-9]+(?:\.[0-9]+)?)\})");
-    std::smatch match;
-
-    if (std::regex_search(s, match, re)) {
-        int subject_id = std::stoi(match[1]);
-        double value   = std::stod(match[2]);
-        return {subject_id, value};
-    } else {
-        throw std::runtime_error("Failed to parse input string");
-    }
-}
-
-    void updateSensorsFromZMQ() {
-        // get messages from zmq
-        auto msgs = getAllUnreadZMQMessages(socket_in);
-        if (!msgs.empty()) {
-            std::cout << "----------------------" << std::endl;
-            for (const auto& msg : msgs) {
-                std::cout << msg << std::endl;
-                auto [id, val] = parseSubjectAndValue(msg);
-                sensors.getAt(id).value = val;
-            }
-
-        }
-    }
 
 public:
-    SensorPrint(zmq::context_t& zmq_cxt) {
-        this->zmq_context.swap(zmq_cxt);
-        this->socket_in = zmq::socket_t(zmq_context, zmq::socket_type::sub);
-        socket_in.set(zmq::sockopt::subscribe, "");
-        socket_in.connect("ipc:///tmp/cyphal_out"); // zmq inproc for testing
+    SensorPrint(ZMQSensorData& sensors_object) : sensors(sensors_object) {}
 
-        std::cout << "Transcribing sensor readings..." << std::endl;
-    }
     void run() {
         try {
             while (true) {
 
-                updateSensorsFromZMQ();
-                
-                std::cout << "Sensor [" << 1 << "] '" << sensors.getAt(1).name << "' Reading: " << sensors.getAt(1).value << std::endl;
-                std::cout << "Sensor [" << 2 << "] '" << sensors.getAt(2).name << "' Reading: " << sensors.getAt(2).value << std::endl;
+                std::cout << "----------------------" << std::endl;
+
+                for (size_t i = 1; i <= sensors.sensorMapping.size(); i++)
+                {
+                    std::cout << "Sensor [" << i << "] '" << sensors.getAt(i).name << "' Reading: " << sensors.getAt(i).value << std::endl;
+                }
+
                 std::cout << "----------------------" << std::endl;
 
                 usleep(1000000);
