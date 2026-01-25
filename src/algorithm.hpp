@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <string>
+#include <unordered_map>
+#include <string>
 
 struct Sensor {
     float value = 0.0f;
@@ -17,11 +19,21 @@ struct Sensors {
     Sensor demoSensor   {1, "Demo"};
     Sensor secondSensor {2, "Second"};
 
-    Sensor& getAt(int subject_id) {
+    std::unordered_map<int, Sensor*> sensorMapping;
 
-             if (subject_id == 1) {return demoSensor;   }
-        else if (subject_id == 2) {return secondSensor; }
-        else {return demoSensor;};
+    Sensors() {
+        sensorMapping[1] = &demoSensor;
+        sensorMapping[2] = &secondSensor;
+    }
+
+    Sensor& getAt(int subject_id) {
+        try {
+            return *sensorMapping[subject_id];
+        } catch(const std::exception& e) {
+            return demoSensor;
+        }
+        
+        
     }
 };
 
