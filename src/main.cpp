@@ -9,8 +9,8 @@
 int main() {
 
     // make sensor objects
-    ZMQSensorData sensors;
-    ZMQOutput output;
+    ZMQSensorData sensors = ZMQSensorData();
+    ZMQOutput output = ZMQOutput();
 
     // create the 4 wheel controllers
     WheelWrapper fl(1000, "FL_Wheel", "cwrubaja.suspension.fl", sensors, output);
