@@ -2,8 +2,10 @@
 #include <vector>
 #include <thread>
 #include "WheelWrapper.hpp"
-#include <zmq.hpp>
 #include <regex>
+
+// brew install zeromq cppzmq
+#include <zmq.hpp>
 
 class ZMQUpdater {
 private:
@@ -61,7 +63,7 @@ public:
                 usleep(100);
             }
         } catch (const std::exception& e) {
-            printf(e.what());
+            ; // ignore
         }
     }
 };

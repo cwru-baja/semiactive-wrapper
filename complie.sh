@@ -16,6 +16,13 @@ else
     mkdir build
 fi
 
+# see if ./logs exists
+if [ -d "logs" ]; then
+    :
+else
+    mkdir logs
+fi
+
 # Compile and link
 c++ -std=c++17 \
     src/*.cpp \

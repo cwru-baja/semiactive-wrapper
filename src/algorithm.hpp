@@ -12,7 +12,7 @@ struct Sensor {
     const std::string name;
 
     // constructors
-    Sensor(short sbj_id, std::string sensor_name) : subject_id(sbj_id), value(0.0f), name(sensor_name) {}
+    Sensor(short sbj_id, std::string sensor_name) : subject_id(sbj_id), name(sensor_name) {}
 };
 
 struct ZMQSensorData {
@@ -45,8 +45,8 @@ struct ZMQOutput {
 };
 
 // Functions now accept references to the specific wheel's data
-void setup(ZMQSensorData& s, ZMQOutput& o);
-void update(ZMQSensorData& s, ZMQOutput& o);
-void emergency(ZMQOutput& o);
+void setup(int subject_id, ZMQSensorData& s, ZMQOutput& o);
+void update(int subject_id, ZMQSensorData& s, ZMQOutput& o);
+void emergency(int subject_id, ZMQSensorData& s, ZMQOutput& o);
 
 #endif

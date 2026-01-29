@@ -4,7 +4,7 @@
 #include <string>
 #include <regex>
 
-#include "algorithm.hpp"
+#include "Algorithm.hpp"
 
 #include <zmq.hpp>
 
@@ -12,7 +12,6 @@ class SensorPrint {
 private:
 
     ZMQSensorData& sensors;
-
 
 public:
     SensorPrint(ZMQSensorData& sensors_object) : sensors(sensors_object) {}
@@ -33,7 +32,7 @@ public:
                 usleep(1000000);
             }
         } catch (const std::exception& e) {
-            printf(e.what());
+            ; // ignore
         }
     }
 };
