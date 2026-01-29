@@ -2,6 +2,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <mutex>
+#include <atomic>
 
 struct AlgorithmMemory
 {
