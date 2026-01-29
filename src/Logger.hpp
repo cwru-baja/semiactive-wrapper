@@ -36,12 +36,14 @@ private:
     }
 
     // get seconds since program start
-    double getTimeSinceStart() {
+    std::string getTimeSinceStart() {
         static auto start_time = std::chrono::high_resolution_clock::now();
         auto current_time = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> elapsed = current_time - start_time;
         // round to 2 decimal places
-        return std::round(elapsed.count() * 100.0) / 100.0;
+        std::ostringstream oss;
+        oss << std::fixed << std::setprecision(2) << elapsed.count();
+        return oss.str(); 
     }
 public:
     Logger(bool do_file_log, bool do_print_log) : file_log(do_file_log), print_log(do_print_log) {
@@ -52,28 +54,28 @@ public:
 
     void logStart(std::string name) {
         std::lock_guard<std::mutex> lock(log_mutex);
-        std::string str = "( " + std::to_string(getTimeSinceStart()) + " ) [" + name + "] Starting Control Loop...";
+        std::string str = "( " + getTimeSinceStart() + " ) [" + name + "] Starting Control Loop...";
         if (file_log) outFile << str << std::endl;
         if (print_log) std::cout << str << std::endl;
     }
 
     void logTimeout(std::string name) {
         std::lock_guard<std::mutex> lock(log_mutex);
-        std::string str = "( " + std::to_string(getTimeSinceStart()) + " ) [" + name + "] Work Function Timeout!";
+        std::string str = "( " + getTimeSinceStart() + " ) [" + name + "] Work Function Timeout!";
         if (file_log) outFile << str << std::endl;
         if (print_log) std::cout << str << std::endl;
     }
 
     void logUnknownError(std::string name) {
         std::lock_guard<std::mutex> lock(log_mutex);
-        std::string str = "( " + std::to_string(getTimeSinceStart()) + " ) [" + name + "] Unknown Frame Error!";
+        std::string str = "( " + getTimeSinceStart() + " ) [" + name + "] Unknown Frame Error!";
         if (file_log) outFile << str << std::endl;
         if (print_log) std::cout << str << std::endl;
     }
 
     void logCriticalFailure(std::string name) {
         std::lock_guard<std::mutex> lock(log_mutex);
-        std::string str = "( " + std::to_string(getTimeSinceStart()) + " ) [" + name + "] CRITICAL FAILURE! REVERTING TO EMERGENCY MODE SETPOINT!";
+        std::string str = "( " + getTimeSinceStart() + " ) [" + name + "] CRITICAL FAILURE! REVERTING TO EMERGENCY MODE SETPOINT!";
         if (file_log) outFile << str << std::endl;
         if (print_log) std::cout << str << std::endl;
     }
