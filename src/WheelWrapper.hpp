@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <functional>
 #include <iomanip>
-#include "Algorithm.hpp"
+#include "Utils.hpp"
 #include "Logger.hpp"
 
 // WheelWrapper: Manages a single wheel's control loop

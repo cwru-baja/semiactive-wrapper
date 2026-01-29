@@ -1,5 +1,5 @@
-#ifndef ALGORITHM_HPP
-#define ALGORITHM_HPP
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
 #include <iostream>
 #include <string>
