@@ -37,10 +37,24 @@ struct ZMQSensorData {
 
 
 struct ZMQOutput {
-    std::unordered_map<int, double> subject_id_setpoints_map;
+    const int FL_SETPOINT_ID = 1001;
+    double FL_setpoint = 0.0;
+
+    const int FR_SETPOINT_ID = 1002;
+    double FR_setpoint = 0.0;
+
+    const int BL_SETPOINT_ID = 1003;
+    double BL_setpoint = 0.0;
+
+    const int BR_SETPOINT_ID = 1004;
+    double BR_setpoint = 0.0;
 
     void setSetpoint(int subject_id, double setpoint) {
-        subject_id_setpoints_map[subject_id] = setpoint;
+             if (subject_id == FL_SETPOINT_ID) FL_setpoint = setpoint;
+        else if (subject_id == FR_SETPOINT_ID) FR_setpoint = setpoint;
+        else if (subject_id == BL_SETPOINT_ID) BL_setpoint = setpoint;
+        else if (subject_id == BR_SETPOINT_ID) BR_setpoint = setpoint;
+        else ; // unknown subject_id, do nothing
     }
 };
 

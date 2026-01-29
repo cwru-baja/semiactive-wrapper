@@ -9,11 +9,14 @@
 
 class ZMQUpdater {
 private:
+    // references to sensor and output data
     ZMQSensorData& sensors;
     ZMQOutput& output;
 
+    // zmq objects
     zmq::context_t zmq_context;
     zmq::socket_t socket_in;
+    zmq::socket_t socket_out;
 public:
     ZMQUpdater(ZMQSensorData& sensors_object, ZMQOutput& output_object) 
         : sensors(sensors_object), output(output_object) {
@@ -23,6 +26,9 @@ public:
         socket_in = zmq::socket_t(zmq_context, zmq::socket_type::sub);
         socket_in.set(zmq::sockopt::subscribe, "");
         socket_in.connect("ipc:///tmp/cyphal_out"); // zmq inproc for testing
+
+        socket_out = zmq::socket_t(zmq_context, zmq::socket_type::pub);
+        socket_out.bind("ipc:///tmp/wrapper_out"); // zmq inproc for
     }
 
     std::vector<std::string> getAllUnreadZMQMessages(zmq::socket_t& subSocket) {
@@ -48,22 +54,36 @@ public:
         }
     }
 
+    // update sensors from ZMQ messages
+    void updateSensorsFromZMQMessages() {
+        auto messages = getAllUnreadZMQMessages(socket_in);
+        for (const auto& msg : messages) {
+            try {
+                auto [subject_id, value] = parseSubjectAndValue(msg);
+                Sensor& sensor = sensors.getAt(subject_id);
+                sensor.value = static_cast<float>(value);
+            } catch (const std::exception& e) {
+                ; // ignore malformed messages
+            }
+        }
+    }
+
+    void publishOutputToZMQ() {
+        // Not implemented yet
+        std::string str = "dsflmsf";
+        socket_out.send(zmq::message_t(str), zmq::send_flags::dontwait);
+    }
+
+
     void run() {
         try {
             while (true) {
-                
-                auto msgs = getAllUnreadZMQMessages(socket_in);
-                if (!msgs.empty()) {
-                    for (const auto& msg : msgs) {
-                        auto [id, val] = parseSubjectAndValue(msg);
-                        sensors.getAt(id).value = val;
-                    }
-                }
-
-                usleep(100);
+                updateSensorsFromZMQMessages();
+                publishOutputToZMQ();
+                usleep(1000); // update every 1ms
             }
         } catch (const std::exception& e) {
-            ; // ignore
+            throw std::runtime_error("ZMQUpdater encountered a fatal error."); // we are FRIED chat
         }
     }
 };

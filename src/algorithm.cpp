@@ -12,8 +12,9 @@ void update(int subject_id, ZMQSensorData& s, ZMQOutput& o) {
     // Logic goes here using 's' and 'o'
     // Example: o.setpoint = s.voltage * 0.5f; 
     usleep(1000); // simulate some processing delay
+    o.setSetpoint(subject_id, s.demoSensor.value * 0.5f);
 }
 
 void emergency(int subject_id, ZMQSensorData& s, ZMQOutput& o) {
-    o.setSetpoint(1000, 1.3);
+    o.setSetpoint(subject_id, 1.3);
 }

@@ -53,9 +53,7 @@ int main() {
 
     // launch the threads asynchronously
     std::vector<std::thread> threads;
-
-    // lambdas to start the run member function
-    threads.emplace_back([&fl](){ fl.run(); });
+    threads.emplace_back([&fl](){ fl.run(); }); // lambdas to start the run member function
     threads.emplace_back([&fr](){ fr.run(); });
     threads.emplace_back([&bl](){ bl.run(); });
     threads.emplace_back([&br](){ br.run(); });
@@ -67,7 +65,7 @@ int main() {
     // join threads (this will block main forever, as intended)
     for (auto& t : threads) {
         if(t.joinable()) t.join();
-        usleep(10000); // small sleep to prevent busy wait
+        usleep(10000); // sleep to prevent busy wait
     }
 
     // if we are here, we are kinda cooked ngl 

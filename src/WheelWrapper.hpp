@@ -147,8 +147,8 @@ public:
                     throw std::runtime_error("Unknown frame error");
                 }
 
-                // status logging every 1,0000 loops (100 seconds at 100Hz), plus one at the start
-                if ((loop_count % 10000 == 0 && loop_count > 0 ) || (loop_count == 5)) {
+                // status logging every 10,0000 loops (100 seconds at 100Hz), plus one at the start (3 second)
+                if ((loop_count % 10000 == 0 && loop_count > 0 ) || (loop_count == 300)) {
                     logger.logStats(UNIQUE_NAME, avg_algo_time,  avg_frame_time, frame_offset_ms, update_dumps);
                 }
             }

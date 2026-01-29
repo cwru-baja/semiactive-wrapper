@@ -51,28 +51,28 @@ public:
 
     void logStart(std::string name) {
         std::lock_guard<std::mutex> lock(log_mutex);
-        std::string str = "[" + name + "] Starting Control Loop...";
+        std::string str = "( " + std::to_string(getTimeSinceStart()) + " ) [" + name + "] Starting Control Loop...";
         if (file_log) outFile << str << std::endl;
         if (print_log) std::cout << str << std::endl;
     }
 
     void logTimeout(std::string name) {
         std::lock_guard<std::mutex> lock(log_mutex);
-        std::string str = "[" + name + "] Work Function Timeout!";
+        std::string str = "( " + std::to_string(getTimeSinceStart()) + " ) [" + name + "] Work Function Timeout!";
         if (file_log) outFile << str << std::endl;
         if (print_log) std::cout << str << std::endl;
     }
 
     void logUnknownError(std::string name) {
         std::lock_guard<std::mutex> lock(log_mutex);
-        std::string str = "[" + name + "] Unknown Frame Error!";
+        std::string str = "( " + std::to_string(getTimeSinceStart()) + " ) [" + name + "] Unknown Frame Error!";
         if (file_log) outFile << str << std::endl;
         if (print_log) std::cout << str << std::endl;
     }
 
     void logCriticalFailure(std::string name) {
         std::lock_guard<std::mutex> lock(log_mutex);
-        std::string str = "[" + name + "] CRITICAL FAILURE! REVERTING TO EMERGENCY MODE SETPOINT!";
+        std::string str = "( " + std::to_string(getTimeSinceStart()) + " ) [" + name + "] CRITICAL FAILURE! REVERTING TO EMERGENCY MODE SETPOINT!";
         if (file_log) outFile << str << std::endl;
         if (print_log) std::cout << str << std::endl;
     }
@@ -81,12 +81,11 @@ public:
                   double frame_offset_ms, int update_dumps) {
         std::lock_guard<std::mutex> lock(log_mutex);
         std::ostringstream oss;
-        oss << "--- " << name << " Stats @ " << getTimeSinceStart() << "s ---\n";
-        oss << " Avg Algo: " << std::fixed << std::setprecision(2) << avg_algo_time << " ms\n";
-        oss << " Avg Frame: " << std::fixed << std::setprecision(2) << avg_frame_time << " ms\n";
-        oss << " Frame Offset: " << std::fixed << std::setprecision(2) << frame_offset_ms << " ms\n";
-        oss << " Update Dumps: " << update_dumps << "\n";
-        oss << "------------------------------";
+
+        oss << "( " << getTimeSinceStart() << " ) [" << name << "] ";
+        oss << "{ Avg Algo: " << std::fixed << std::setprecision(2) << avg_algo_time << " ms, ";
+        oss << " Avg Frame: " << std::fixed << std::setprecision(2) << avg_frame_time << " ms, ";
+        oss << " Update Dumps: " << update_dumps << " }";
 
         std::string str = oss.str();
         if (file_log) outFile << str << std::endl;

@@ -1,6 +1,6 @@
 .DS_Store
-build/
 .vscode/
+build/
 logs/
 
 # Byte-compiled / optimized / DLL files
