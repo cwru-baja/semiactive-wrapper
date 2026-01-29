@@ -37,23 +37,23 @@ struct ZMQSensorData {
 
 
 struct ZMQOutput {
-    const int FL_SETPOINT_ID = 1001;
+    const int FL_SUBJECT_ID = 1001;
     double FL_setpoint = 0.0;
 
-    const int FR_SETPOINT_ID = 1002;
+    const int FR_SUBJECT_ID = 1002;
     double FR_setpoint = 0.0;
 
-    const int BL_SETPOINT_ID = 1003;
+    const int BL_SUBJECT_ID = 1003;
     double BL_setpoint = 0.0;
 
-    const int BR_SETPOINT_ID = 1004;
+    const int BR_SUBJECT_ID = 1004;
     double BR_setpoint = 0.0;
 
     void setSetpoint(int subject_id, double setpoint) {
-             if (subject_id == FL_SETPOINT_ID) FL_setpoint = setpoint;
-        else if (subject_id == FR_SETPOINT_ID) FR_setpoint = setpoint;
-        else if (subject_id == BL_SETPOINT_ID) BL_setpoint = setpoint;
-        else if (subject_id == BR_SETPOINT_ID) BR_setpoint = setpoint;
+             if (subject_id == FL_SUBJECT_ID) FL_setpoint = setpoint;
+        else if (subject_id == FR_SUBJECT_ID) FR_setpoint = setpoint;
+        else if (subject_id == BL_SUBJECT_ID) BL_setpoint = setpoint;
+        else if (subject_id == BR_SUBJECT_ID) BR_setpoint = setpoint;
         else ; // unknown subject_id, do nothing
     }
 };

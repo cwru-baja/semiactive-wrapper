@@ -68,10 +68,22 @@ public:
         }
     }
 
+    
+
     void publishOutputToZMQ() {
-        // Not implemented yet
-        std::string str = "dsflmsf";
-        socket_out.send(zmq::message_t(str), zmq::send_flags::dontwait);
+
+        // evan whats this format:
+        // '{"priority": 2, "type":"cwrubaja.suspension.vcm.Setpoint.0.2", "current": {"ampere": 67.0}, "subject_id": 127}'
+        // and evan gets what evan wants
+        // so here goes
+        auto format = [](int sub_id, double setpoint) {
+            return "{\"priority\": 2, \"type\":\"cwrubaja.suspension.vcm.Setpoint.0.2\", \"current\": {\"ampere\": " + std::to_string(setpoint) + "}, \"subject_id\": " + std::to_string(sub_id) + "}";
+        };
+
+        socket_out.send(zmq::message_t(format(output.FL_SUBJECT_ID, output.FL_setpoint)), zmq::send_flags::dontwait);
+        socket_out.send(zmq::message_t(format(output.FR_SUBJECT_ID, output.FR_setpoint)), zmq::send_flags::dontwait);
+        socket_out.send(zmq::message_t(format(output.BL_SUBJECT_ID, output.BL_setpoint)), zmq::send_flags::dontwait);
+        socket_out.send(zmq::message_t(format(output.BR_SUBJECT_ID, output.BR_setpoint)), zmq::send_flags::dontwait);
     }
 
 
