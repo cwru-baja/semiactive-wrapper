@@ -9,6 +9,7 @@
 #include <string>
 #include <mutex>
 #include <sstream>
+#include <cmath>
 
 // Simple Logger class for logging events to file and console
 class Logger {
