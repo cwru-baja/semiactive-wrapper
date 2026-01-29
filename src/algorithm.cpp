@@ -1,6 +1,17 @@
 #include "Utils.hpp"
 #include <iostream>
 #include <unistd.h>
+#include <mutex>
+
+struct AlgorithmMemory
+{
+    std::atomic<double> pi = 3.141592653589793; // atomic, all threads can read/write to this value
+    std::string our_lord_and_savior = std::string("evan grover"); // since this is non-atomic, threads can not see changes made by other threads
+    
+    std::atomic<double> shared_int = 67.0; // example shared number
+};
+
+AlgorithmMemory memory; // shared memory struct for all wheels and threads
 
 void setup(int subject_id, ZMQSensorData& s, ZMQOutput& o) {
     s.demoSensor.value = 12.0f;
