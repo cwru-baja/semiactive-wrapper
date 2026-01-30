@@ -2,6 +2,7 @@
 #include <vector>
 #include <thread>
 #include "WheelWrapper.hpp"
+#include "Logger.hpp"
 #include <regex>
 
 // brew install zeromq cppzmq
@@ -13,24 +14,34 @@ private:
     ZMQSensorData& sensors;
     ZMQOutput& output;
 
+    // logger reference
+    Logger& logger;
+
     // zmq objects
     zmq::context_t zmq_context;
     zmq::socket_t socket_in;
     zmq::socket_t socket_out;
+
 public:
-    ZMQUpdater(ZMQSensorData& sensors_object, ZMQOutput& output_object) 
-        : sensors(sensors_object), output(output_object) {
+    ZMQUpdater(std::string zmq_in, std::string zmq_out, ZMQSensorData& sensors_object, ZMQOutput& output_object, Logger& logger_object) 
+        : sensors(sensors_object), output(output_object), logger(logger_object){
 
-        zmq_context = zmq::context_t(1);
+        zmq_context = zmq::context_t(1); // zmq context
             
-        socket_in = zmq::socket_t(zmq_context, zmq::socket_type::sub);
+        // setup zmq  input socket
+        socket_in = zmq::socket_t(zmq_context, zmq::socket_type::sub); // subscriber socket
         socket_in.set(zmq::sockopt::subscribe, "");
-        socket_in.connect("ipc:///tmp/cyphal_out"); // zmq inproc for testing
+        socket_in.connect(zmq_in);
 
-        socket_out = zmq::socket_t(zmq_context, zmq::socket_type::pub);
-        socket_out.bind("ipc:///tmp/wrapper_out"); // zmq inproc for
+        // setup zmq output socket
+        socket_out = zmq::socket_t(zmq_context, zmq::socket_type::pub); // publisher socket
+        socket_out.bind(zmq_out);
+
+        // log zmq updater start
+        logger.log("ZMQUpdater", "ZMQUpdater initialized. Subscribed to: " + zmq_in + ", publishing to: " + zmq_out);
     }
 
+    // get all unread zmq messages
     std::vector<std::string> getAllUnreadZMQMessages(zmq::socket_t& subSocket) {
         std::vector<std::string> messages;
         zmq::message_t msg;
@@ -40,6 +51,7 @@ public:
         return messages;
     }
 
+    // parse subject_id and value from input string
     std::pair<int, double> parseSubjectAndValue(const std::string& s) {
         // Match: {'subject_id': 32, 'value': 624.45}
         std::regex re(R"(\{'subject_id':\s*(\d+),\s*'value':\s*([0-9]+(?:\.[0-9]+)?)\})");
@@ -57,6 +69,7 @@ public:
     // update sensors from ZMQ messages
     void updateSensorsFromZMQMessages() {
         auto messages = getAllUnreadZMQMessages(socket_in);
+        if (messages.empty()) return; // no messages to process
         for (const auto& msg : messages) {
             try {
                 auto [subject_id, value] = parseSubjectAndValue(msg);
@@ -69,7 +82,7 @@ public:
     }
 
     
-
+    // publish output setpoints to ZMQ
     void publishOutputToZMQ() {
 
         // evan whats this format:
@@ -89,12 +102,13 @@ public:
 
     void run() {
         try {
-            while (true) {
+            while (true) { // main loop
                 updateSensorsFromZMQMessages();
                 publishOutputToZMQ();
                 usleep(1000); // update every 1ms
             }
-        } catch (const std::exception& e) {
+        } catch (const std::exception& e) { // fatal error
+            logger.log("ZMQUpdater", "ZMQUpdater encountered a fatal error: " + std::string(e.what()));
             throw std::runtime_error("ZMQUpdater encountered a fatal error."); // we are FRIED chat
         }
     }

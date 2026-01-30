@@ -29,6 +29,10 @@ private:
 
     // logger
     Logger& logger;
+
+    // shared memory for algorithm
+    SharedAlgorithmMemory& algo_memory_object;
+
     
     // these will change over time
     // track this wheels update performance for this wheel
@@ -104,13 +108,13 @@ private:
 
 
 public:
-    WheelWrapper(int subject_id, std::string name, int update_hz, int max_update_dumps, ZMQSensorData& sensors_object, ZMQOutput& output_object, Logger& logger_object)
-        : SUBJECT_ID(subject_id), UNIQUE_NAME(name), UPDATE_HZ(update_hz), FRAME_DURATION_MS(1000/UPDATE_HZ), MAX_UPDATE_DUMPS(max_update_dumps), sensors(sensors_object), output(output_object), logger(logger_object)
+    WheelWrapper(int subject_id, std::string name, int update_hz, int max_update_dumps, ZMQSensorData& sensors_object, ZMQOutput& output_object, SharedAlgorithmMemory& memory_object, Logger& logger_object)
+        : SUBJECT_ID(subject_id), UNIQUE_NAME(name), UPDATE_HZ(update_hz), FRAME_DURATION_MS(1000/UPDATE_HZ), MAX_UPDATE_DUMPS(max_update_dumps), sensors(sensors_object), output(output_object), algo_memory_object(memory_object), logger(logger_object)
         {}
 
     // The main loop for this specific wheel
     void run() {
-        setup(SUBJECT_ID, sensors, output); // Call algorithm setup
+        setup(SUBJECT_ID, algo_memory_object, sensors, output); // Call algorithm setup
         logger.logStart(UNIQUE_NAME);
 
         try {
@@ -120,7 +124,7 @@ public:
 
                 // Run the frame race
                 int dur = frame([&]() {
-                    update(SUBJECT_ID, sensors, output); // the work function is the algorithm update method
+                    update(SUBJECT_ID, algo_memory_object, sensors, output); // the work function is the algorithm update method
                 });
 
                 if (dur >= 0) { // successful update frame (no timeout or error)
@@ -147,14 +151,14 @@ public:
                     throw std::runtime_error("Unknown frame error");
                 }
 
-                // status logging every 10,0000 loops (100 seconds at 100Hz), plus one at the start (3 second)
+                // status logging every 10,0000 loops (100 seconds at 100Hz), plus one at the start (3 seconds in)
                 if ((loop_count % 10000 == 0 && loop_count > 0 ) || (loop_count == 300)) {
                     logger.logStats(UNIQUE_NAME, avg_algo_time,  avg_frame_time, frame_offset_ms, update_dumps);
                 }
             }
         } catch (const std::exception& e) { // if we get here, something critical happened several times
             logger.logCriticalFailure(UNIQUE_NAME);
-            emergency(SUBJECT_ID, sensors, output); // set emergency setpoint
+            emergency(SUBJECT_ID, algo_memory_object, sensors, output); // set emergency setpoint
         }
     }
 };

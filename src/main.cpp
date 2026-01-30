@@ -1,12 +1,12 @@
 #include <iostream>
 #include <vector>
 #include <thread>
+#include <zmq.hpp>
+
 #include "WheelWrapper.hpp"
-#include "SensorPrint.hpp"
 #include "ZMQUpdater.hpp"
 #include "Utils.hpp"
 #include "Logger.hpp"
-#include <zmq.hpp>
 
 int main() {
 
@@ -24,31 +24,33 @@ int main() {
     const auto BR_SUBJECT_ID = 1004;
     const auto BR_UNIQUE_NAME = "BR_Wheel";
 
-
     const int UPDATE_HZ = 100;
     const int MAX_UPDATE_DUMPS = 10;
 
+    const std::string ZMQ_IN = "ipc:///tmp/cyphal_out"; // zmq inproc for testing
+    const std::string ZMQ_OUT = "ipc:///tmp/wrapper_out"; // zmq inproc for testing
 
 
 
+
+    // shared algorithm memory
+    SharedAlgorithmMemory shared_memory;
 
     // make sensor objects
-    ZMQSensorData sensors = ZMQSensorData();
-    ZMQOutput output = ZMQOutput();
+    ZMQSensorData sensors;
+    ZMQOutput output;
 
     // start the logger
     Logger logger = Logger(true, true); // file logging (to ./log), print (std:cout) logging
 
     // start the ZMQ updater
-    ZMQUpdater zu(sensors, output);
+    ZMQUpdater zu(ZMQ_IN, ZMQ_OUT, sensors, output, logger);
 
     // create the 4 wheel controllers
-    WheelWrapper fl(FL_SUBJECT_ID, FL_UNIQUE_NAME, UPDATE_HZ, MAX_UPDATE_DUMPS, sensors, output, logger);
-    WheelWrapper fr(FR_SUBJECT_ID, FR_UNIQUE_NAME, UPDATE_HZ, MAX_UPDATE_DUMPS, sensors, output, logger);
-    WheelWrapper bl(BL_SUBJECT_ID, BL_UNIQUE_NAME, UPDATE_HZ, MAX_UPDATE_DUMPS, sensors, output, logger);
-    WheelWrapper br(BR_SUBJECT_ID, BR_UNIQUE_NAME, UPDATE_HZ, MAX_UPDATE_DUMPS, sensors, output, logger);
-
-    SensorPrint sp(sensors); // print
+    WheelWrapper fl(FL_SUBJECT_ID, FL_UNIQUE_NAME, UPDATE_HZ, MAX_UPDATE_DUMPS, sensors, output, shared_memory, logger);
+    WheelWrapper fr(FR_SUBJECT_ID, FR_UNIQUE_NAME, UPDATE_HZ, MAX_UPDATE_DUMPS, sensors, output, shared_memory, logger);
+    WheelWrapper bl(BL_SUBJECT_ID, BL_UNIQUE_NAME, UPDATE_HZ, MAX_UPDATE_DUMPS, sensors, output, shared_memory, logger);
+    WheelWrapper br(BR_SUBJECT_ID, BR_UNIQUE_NAME, UPDATE_HZ, MAX_UPDATE_DUMPS, sensors, output, shared_memory, logger);
     
 
     // launch the threads asynchronously
@@ -59,9 +61,6 @@ int main() {
     threads.emplace_back([&br](){ br.run(); });
     threads.emplace_back([&zu](){ zu.run(); });
 
-    // print sensors
-    threads.emplace_back([&sp](){ sp.run(); });
-
     // join threads (this will block main forever, as intended)
     for (auto& t : threads) {
         if(t.joinable()) t.join();
@@ -70,7 +69,7 @@ int main() {
 
     // if we are here, we are kinda cooked ngl 
     // this is really just to satisfy the compiler
-    logger.log("Main thread exiting (this should never happen). All wheels have stopped. Program terminated.");
+    logger.log("MAIN", "Main thread exiting (this should never happen). All wheels have stopped. Program terminated.");
 
     return 0;
 }

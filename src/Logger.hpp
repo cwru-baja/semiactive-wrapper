@@ -47,11 +47,14 @@ private:
     }
 public:
     Logger(bool do_file_log, bool do_print_log) : file_log(do_file_log), print_log(do_print_log) {
-        outFile = std::ofstream("logs/" + current_datetime() + ".log"); // open log file
-        outFile << "Log started at " << current_datetime() << std::endl;
+        if (file_log) {
+            outFile = std::ofstream("logs/" + current_datetime() + ".log"); // open log file
+            outFile << "Log started at " << current_datetime() << std::endl;
+        }
         getTimeSinceStart(); // initialize start time
     };
 
+    // log the start of a wheel control loop
     void logStart(std::string name) {
         std::lock_guard<std::mutex> lock(log_mutex);
         std::string str = "( " + getTimeSinceStart() + " ) [" + name + "] Starting Control Loop...";
@@ -59,6 +62,7 @@ public:
         if (print_log) std::cout << str << std::endl;
     }
 
+    // log a update timeout event
     void logTimeout(std::string name) {
         std::lock_guard<std::mutex> lock(log_mutex);
         std::string str = "( " + getTimeSinceStart() + " ) [" + name + "] Work Function Timeout!";
@@ -66,6 +70,7 @@ public:
         if (print_log) std::cout << str << std::endl;
     }
 
+    // log an unknown error event
     void logUnknownError(std::string name) {
         std::lock_guard<std::mutex> lock(log_mutex);
         std::string str = "( " + getTimeSinceStart() + " ) [" + name + "] Unknown Frame Error!";
@@ -73,6 +78,7 @@ public:
         if (print_log) std::cout << str << std::endl;
     }
 
+    // log a critical failure event
     void logCriticalFailure(std::string name) {
         std::lock_guard<std::mutex> lock(log_mutex);
         std::string str = "( " + getTimeSinceStart() + " ) [" + name + "] CRITICAL FAILURE! REVERTING TO EMERGENCY MODE SETPOINT!";
@@ -80,14 +86,15 @@ public:
         if (print_log) std::cout << str << std::endl;
     }
 
+    // log periodic stats for the wheel
     void logStats(const std::string& name, double avg_algo_time, double avg_frame_time, 
                   double frame_offset_ms, int update_dumps) {
         std::lock_guard<std::mutex> lock(log_mutex);
         std::ostringstream oss;
 
         oss << "( " << getTimeSinceStart() << " ) [" << name << "] ";
-        oss << "{ Avg Algo: " << std::fixed << std::setprecision(2) << avg_algo_time << " ms, ";
-        oss << " Avg Frame: " << std::fixed << std::setprecision(2) << avg_frame_time << " ms, ";
+        oss << "{ Avg Algo: " << std::fixed << std::setprecision(2) << avg_algo_time << " ms,";
+        oss << " Avg Frame: " << std::fixed << std::setprecision(2) << avg_frame_time << " ms,";
         oss << " Update Dumps: " << update_dumps << " }";
 
         std::string str = oss.str();
@@ -96,10 +103,11 @@ public:
     }
 
     // general log function
-    void log(const std::string& message) {
+    void log(const std::string& name ,const std::string& message) {
         std::lock_guard<std::mutex> lock(log_mutex);
-        if (file_log) outFile << message << std::endl;
-        if (print_log) std::cout << message << std::endl;
+        std::string str = "( " + getTimeSinceStart() + " ) [" + name + "] " + message;
+        if (file_log) outFile << str << std::endl;
+        if (print_log) std::cout << str << std::endl;
     }
 
 };

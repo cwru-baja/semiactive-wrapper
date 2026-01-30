@@ -6,6 +6,12 @@
 #include <unordered_map>
 #include <string>
 
+struct SharedAlgorithmMemory
+{
+    double pi = 3.141592653589793;
+    std::string our_lord_and_savior = "evan grover";
+};
+
 struct Sensor {
     float value = 0.0f;
     const short subject_id;
@@ -59,8 +65,8 @@ struct ZMQOutput {
 };
 
 // Functions now accept references to the specific wheel's data
-void setup(int subject_id, ZMQSensorData& s, ZMQOutput& o);
-void update(int subject_id, ZMQSensorData& s, ZMQOutput& o);
-void emergency(int subject_id, ZMQSensorData& s, ZMQOutput& o);
+void setup(int subject_id, SharedAlgorithmMemory& m, ZMQSensorData& s, ZMQOutput& o);
+void update(int subject_id, SharedAlgorithmMemory& m, ZMQSensorData& s, ZMQOutput& o);
+void emergency(int subject_id, SharedAlgorithmMemory& m, ZMQSensorData& s, ZMQOutput& o);
 
 #endif
