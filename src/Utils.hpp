@@ -20,7 +20,7 @@ struct SharedAlgorithmMemory
 
 // sensor data structure
 struct Sensor {
-    float value = 0.0f;
+    double value = 0.0f;
     const short subject_id;
     const std::string name;
 

@@ -36,13 +36,13 @@ private:
     
     // these will change over time
     // track this wheels update performance for this wheel
-    float avg_algo_time = 0;
-    float avg_frame_time = 0;
+    double avg_algo_time = 0;
+    double avg_frame_time = 0;
     int loop_count = 0;
     int update_dumps = 0;
 
     // dynamic frame offset to help maintain frame timing
-    float frame_offset_ms = 0.0f;
+    double frame_offset_ms = 0.0f;
 
 
 

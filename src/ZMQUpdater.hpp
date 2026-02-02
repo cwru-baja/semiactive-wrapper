@@ -74,7 +74,7 @@ public:
             try {
                 auto [subject_id, value] = parseSubjectAndValue(msg);
                 Sensor& sensor = sensors.getAt(subject_id);
-                sensor.value = static_cast<float>(value);
+                sensor.value = value;
             } catch (const std::exception& e) {
                 continue;; // ignore malformed messages, or unknown subject_ids
             }
