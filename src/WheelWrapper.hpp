@@ -14,23 +14,23 @@
 class WheelWrapper {
 private:
     // Configuration, set at construction, unique per wheel
-    const int SUBJECT_ID;
+    const int         SUBJECT_ID;
     const std::string UNIQUE_NAME;
 
     // Configuration, set at construction, common
-    const int UPDATE_HZ;
+    const int  UPDATE_HZ;
     const long FRAME_DURATION_MS;
-    const int MAX_UPDATE_DUMPS;
+    const int  MAX_UPDATE_DUMPS;
 
     
     // sensor and output zmq references
     ZMQSensorData& sensors;
-    ZMQOutput& output;
+    ZMQOutput&     output;
 
-    // logger
+    // logger object
     Logger& logger;
 
-    // shared memory for algorithm
+    // shared memory for the algorithms
     SharedAlgorithmMemory& algo_memory_object;
 
     
@@ -38,8 +38,8 @@ private:
     // track this wheels update performance for this wheel
     double avg_algo_time = 0;
     double avg_frame_time = 0;
-    int loop_count = 0;
-    int update_dumps = 0;
+    int    loop_count = 0;
+    int    update_dumps = 0;
 
     // dynamic frame offset to help maintain frame timing
     double frame_offset_ms = 0.0f;
@@ -67,7 +67,6 @@ private:
 
         // the race funcion
         // this will race with the workFunction
-        // try to keep the workFunction under 6ms to maintain 100Hz
         std::thread tr([&]() { 
             // Using frame_offset to calibrate
             // frame offset ensures we end close to FRAME_DURATION_MS based on previous loop times
@@ -78,6 +77,7 @@ private:
         });
 
         // the work function thread
+        // try to keep the workFunction under 6ms to maintain 100Hz
         std::thread tw([&]() {
             workFunction();
             tw_done = true; // the work function is done

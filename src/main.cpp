@@ -7,50 +7,28 @@
 #include "ZMQUpdater.hpp"
 #include "Utils.hpp"
 #include "Logger.hpp"
+#include "Configs.hpp"
 
 int main() {
-
-    // configs for later
-
-    const auto FL_SUBJECT_ID = 1001;
-    const auto FL_UNIQUE_NAME = "FL_Wheel";
-
-    const auto FR_SUBJECT_ID = 1002;
-    const auto FR_UNIQUE_NAME = "FR_Wheel";
-
-    const auto BL_SUBJECT_ID = 1003;
-    const auto BL_UNIQUE_NAME = "BL_Wheel";
-
-    const auto BR_SUBJECT_ID = 1004;
-    const auto BR_UNIQUE_NAME = "BR_Wheel";
-
-    const int UPDATE_HZ = 100;
-    const int MAX_UPDATE_DUMPS = 10;
-
-    const std::string ZMQ_IN = "ipc:///tmp/cyphal_out"; // zmq inproc for testing
-    const std::string ZMQ_OUT = "ipc:///tmp/wrapper_out"; // zmq inproc for testing
-
-
-
 
     // shared algorithm memory
     SharedAlgorithmMemory shared_memory;
 
     // make sensor objects
     ZMQSensorData sensors;
-    ZMQOutput output;
+    ZMQOutput     output;
 
     // start the logger
     Logger logger = Logger(true, true); // file logging (to ./log), print (std:cout) logging
 
     // start the ZMQ updater
-    ZMQUpdater zu(ZMQ_IN, ZMQ_OUT, sensors, output, logger);
+    ZMQUpdater zu(CONFIG_ZMQ_IN, CONFIG_ZMQ_OUT, sensors, output, logger);
 
     // create the 4 wheel controllers
-    WheelWrapper fl(FL_SUBJECT_ID, FL_UNIQUE_NAME, UPDATE_HZ, MAX_UPDATE_DUMPS, sensors, output, shared_memory, logger);
-    WheelWrapper fr(FR_SUBJECT_ID, FR_UNIQUE_NAME, UPDATE_HZ, MAX_UPDATE_DUMPS, sensors, output, shared_memory, logger);
-    WheelWrapper bl(BL_SUBJECT_ID, BL_UNIQUE_NAME, UPDATE_HZ, MAX_UPDATE_DUMPS, sensors, output, shared_memory, logger);
-    WheelWrapper br(BR_SUBJECT_ID, BR_UNIQUE_NAME, UPDATE_HZ, MAX_UPDATE_DUMPS, sensors, output, shared_memory, logger);
+    WheelWrapper fl(CONFIG_FL_SUBJECT_ID, CONFIG_FL_UNIQUE_NAME, CONFIG_UPDATE_HZ, CONFIG_MAX_UPDATE_DUMPS, sensors, output, shared_memory, logger);
+    WheelWrapper fr(CONFIG_FR_SUBJECT_ID, CONFIG_FR_UNIQUE_NAME, CONFIG_UPDATE_HZ, CONFIG_MAX_UPDATE_DUMPS, sensors, output, shared_memory, logger);
+    WheelWrapper bl(CONFIG_BL_SUBJECT_ID, CONFIG_BL_UNIQUE_NAME, CONFIG_UPDATE_HZ, CONFIG_MAX_UPDATE_DUMPS, sensors, output, shared_memory, logger);
+    WheelWrapper br(CONFIG_BR_SUBJECT_ID, CONFIG_BR_UNIQUE_NAME, CONFIG_UPDATE_HZ, CONFIG_MAX_UPDATE_DUMPS, sensors, output, shared_memory, logger);
     
 
     // launch the threads asynchronously
@@ -64,7 +42,7 @@ int main() {
     // join threads (this will block main forever, as intended)
     for (auto& t : threads) {
         if(t.joinable()) t.join();
-        usleep(10000); // sleep to prevent busy wait
+        usleep(1000000); // sleep to prevent busy wait
     }
 
     // if we are here, we are kinda cooked ngl 
