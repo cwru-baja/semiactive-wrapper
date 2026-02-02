@@ -4,6 +4,7 @@
 #include <regex>
 
 // brew install nlohmann-json
+// sudo apt install nlohmann-json3-dev
 #include <nlohmann/json.hpp>
 
 // brew install zeromq cppzmq
