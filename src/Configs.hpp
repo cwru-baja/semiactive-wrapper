@@ -1,5 +1,6 @@
-#include <string>
+#pragma once
 
+#include <string>
 
 const auto CONFIG_FL_SUBJECT_ID = 3100;
 const auto CONFIG_FL_UNIQUE_NAME = "FL_Wheel";
