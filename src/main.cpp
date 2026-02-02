@@ -11,7 +11,7 @@
 
 int main() {
 
-    // shared algorithm memory
+    // shared algorithm memory object
     SharedAlgorithmMemory shared_memory;
 
     // make sensor objects

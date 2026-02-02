@@ -107,7 +107,7 @@ public:
             while (true) { // main loop
                 updateSensorsFromZMQMessages();
                 publishOutputToZMQ();
-                usleep(1000); // update every 1ms
+                usleep(2500); // update every 2.5ms
             }
         } catch (const std::exception& e) { // fatal error in zmq updater, we are FRIED chat
             logger.log("ZMQUpdater", "ZMQUpdater encountered a fatal error: " + std::string(e.what()));
