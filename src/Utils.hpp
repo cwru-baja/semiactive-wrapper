@@ -6,12 +6,19 @@
 #include <unordered_map>
 #include <string>
 
+
+// shared memory structure for algorithms
 struct SharedAlgorithmMemory
 {
     double pi = 3.141592653589793;
     std::string our_lord_and_savior = "evan grover";
 };
 
+
+
+
+
+// sensor data structure
 struct Sensor {
     float value = 0.0f;
     const short subject_id;
@@ -21,6 +28,8 @@ struct Sensor {
     Sensor(short sbj_id, std::string sensor_name) : subject_id(sbj_id), name(sensor_name) {}
 };
 
+// ZMQ Sensor Data container
+// holds all sensors and provides access by subject_id
 struct ZMQSensorData {
     Sensor demoSensor   {1, "Demo"};
     Sensor secondSensor {2, "Second"};
@@ -36,12 +45,13 @@ struct ZMQSensorData {
         try {
             return *sensorMapping[subject_id];
         } catch(const std::exception& e) {
-            return demoSensor;
+            throw std::runtime_error("Sensor with subject_id " + std::to_string(subject_id) + " not found.");
         }
     }
 };
 
-
+// ZMQ Output structure
+// holds setpoints for each wheel
 struct ZMQOutput {
     const int FL_SUBJECT_ID = 1001;
     double FL_setpoint = 0.0;

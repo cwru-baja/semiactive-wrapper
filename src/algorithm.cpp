@@ -7,6 +7,7 @@
 void setup(int subject_id, SharedAlgorithmMemory& m, ZMQSensorData& s, ZMQOutput& o) {
     s.demoSensor.value = 12.0f;
     o.setSetpoint(1000, 0.3);
+    m.pi = 3.14;
     // std::cout << "Setup complete." << std::endl; 
 }
 

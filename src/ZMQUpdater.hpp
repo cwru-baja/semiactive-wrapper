@@ -76,7 +76,7 @@ public:
                 Sensor& sensor = sensors.getAt(subject_id);
                 sensor.value = static_cast<float>(value);
             } catch (const std::exception& e) {
-                ; // ignore malformed messages
+                continue;; // ignore malformed messages, or unknown subject_ids
             }
         }
     }
@@ -86,11 +86,11 @@ public:
     void publishOutputToZMQ() {
 
         // evan whats this format:
-        // '{"priority": 2, "type":"cwrubaja.suspension.vcm.Setpoint.0.2", "current": {"ampere": 67.0}, "subject_id": 127}'
+        // '{"priority": 2, "type":"cwrubaja.suspension.vcm.Setpoint_0_2", "current": {"ampere": 67.0}, "subject_id": 127}'
         // and evan gets what evan wants
         // so here goes
         auto format = [](int sub_id, double setpoint) {
-            return "{\"priority\": 2, \"type\":\"cwrubaja.suspension.vcm.Setpoint.0.2\", \"current\": {\"ampere\": " + std::to_string(setpoint) + "}, \"subject_id\": " + std::to_string(sub_id) + "}";
+            return "{\"priority\": 2, \"type\":\"cwrubaja.suspension.vcm.Setpoint_0_2\", \"current\": {\"ampere\": " + std::to_string(setpoint) + "}, \"subject_id\": " + std::to_string(sub_id) + "}";
         };
 
         socket_out.send(zmq::message_t(format(output.FL_SUBJECT_ID, output.FL_setpoint)), zmq::send_flags::dontwait);
