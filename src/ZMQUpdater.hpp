@@ -1,12 +1,16 @@
 #include <iostream>
 #include <vector>
 #include <thread>
-#include "WheelWrapper.hpp"
-#include "Logger.hpp"
 #include <regex>
+
+// brew install nlohmann-json
+#include <nlohmann/json.hpp>
 
 // brew install zeromq cppzmq
 #include <zmq.hpp>
+
+#include "WheelWrapper.hpp"
+#include "Logger.hpp"
 #include "Configs.hpp"
 
 class ZMQUpdater {
@@ -52,23 +56,20 @@ public:
         return messages;
     }
 
-    // parse subject_id and value from input string
+    // Then replace the parseSubjectAndValue function with:
     std::pair<int, double> parseSubjectAndValue(const std::string& s) {
-        // Match: {'subject_id': 32, 'value': 624.45}
-        std::regex re(R"(\{'subject_id':\s*(\d+),\s*'value':\s*([0-9]+(?:\.[0-9]+)?)\})");
-        std::smatch match;
-
-        if (std::regex_search(s, match, re)) {
-            int subject_id = std::stoi(match[1]);
-            double value   = std::stod(match[2]);
+        try {
+            auto json = nlohmann::json::parse(s);
+            int subject_id = json["subject_id"];
+            double value = json["value"];
             return {subject_id, value};
-        } else {
-            throw std::runtime_error("Failed to parse input string");
+        } catch (const std::exception& e) {
+            throw std::runtime_error("Failed to parse JSON: " + std::string(e.what()));
         }
     }
 
     // update sensors from ZMQ messages
-    void updateSensorsFromZMQMessages() {
+    void updateSensorsFromZMQ() {
         auto messages = getAllUnreadZMQMessages(socket_in);
         if (messages.empty()) return; // no messages to process
         for (const auto& msg : messages) {
@@ -105,7 +106,7 @@ public:
     void run() {
         try {
             while (true) { // main loop
-                updateSensorsFromZMQMessages();
+                updateSensorsFromZMQ();
                 publishOutputToZMQ();
                 usleep(2500); // update every 2.5ms
             }

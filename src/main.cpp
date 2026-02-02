@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <thread>
-#include <zmq.hpp>
 
 #include "WheelWrapper.hpp"
 #include "ZMQUpdater.hpp"
