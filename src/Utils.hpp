@@ -32,7 +32,7 @@ struct Sensor {
     const std::string name;
 
     // constructors
-    Sensor(short sbj_id, CppDsdlDataType data_type, std::string sensor_name) : subject_id(sbj_id), data_object(data_type), name(sensor_name) {}
+    Sensor(short sbj_id, T data_type, std::string sensor_name) : subject_id(sbj_id), data_object(data_type), name(sensor_name) {}
 };
 
 // ZMQ sensor data container
@@ -40,7 +40,7 @@ struct Sensor {
 // all available sensors are a member of this struct
 struct ZMQSensorData {
     // demo sensors
-    Sensor<uavcan_si_sample_magnetic_flux_density_Scalar_1_0> demoSensor   {1, uavcan_primitive_array_Natural8_1_0(), "Demo"};
+    Sensor<uavcan_si_sample_magnetic_flux_density_Scalar_1_0> demoSensor {1, uavcan_si_sample_magnetic_flux_density_Scalar_1_0(), "Demo"};
 
     std::unordered_map<int, void*> sensorMapping;
 
