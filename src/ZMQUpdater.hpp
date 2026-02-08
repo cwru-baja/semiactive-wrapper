@@ -79,7 +79,7 @@ public:
             try {
                 auto json = nlohmann::json::parse(msg);
 
-                std::cout << json["subject_id"] + "  " + json["type"] << std::endl;
+                std::cout << json["subject_id"] << "  " << json["type"] << std::endl;
                 // auto [subject_id, value] = parseSubjectAndValue(msg);
                 // Sensor& sensor = sensors.getAt(subject_id);
                 // sensor.value = value;
