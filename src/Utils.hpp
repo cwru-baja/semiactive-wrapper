@@ -7,6 +7,7 @@
 #include <string>
 
 #include "Configs.hpp"
+#include "../dsdl/CPP_DSDLs.hpp"
 
 
 // a shared memory structure for algorithms
@@ -19,21 +20,19 @@ struct SharedAlgorithmMemory {
     std::string our_lord_and_savior = "evan grover";
 };
 
-
-
-
 // -----------------------------------------------------------------
 // DONT MODIFY BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING
 // -----------------------------------------------------------------
 
 // a sensor data structure
+template <typename T>
 struct Sensor {
-    double            value = 0.0f;
+    T data_object; // placeholder for data type info
     const short       subject_id;
     const std::string name;
 
     // constructors
-    Sensor(short sbj_id, std::string sensor_name) : subject_id(sbj_id), name(sensor_name) {}
+    Sensor(short sbj_id, CppDsdlDataType data_type, std::string sensor_name) : subject_id(sbj_id), data_object(data_type), name(sensor_name) {}
 };
 
 // ZMQ sensor data container
@@ -41,21 +40,20 @@ struct Sensor {
 // all available sensors are a member of this struct
 struct ZMQSensorData {
     // demo sensors
-    Sensor demoSensor   {1, "Demo"};
-    Sensor secondSensor {2, "Second"};
+    Sensor<uavcan_si_sample_magnetic_flux_density_Scalar_1_0> demoSensor   {1, uavcan_primitive_array_Natural8_1_0(), "Demo"};
 
-    std::unordered_map<int, Sensor*> sensorMapping;
+    std::unordered_map<int, void*> sensorMapping;
 
     ZMQSensorData() { // map subject_ids to sensor pointers
         sensorMapping[1] = &demoSensor; // map pos is the same as subject_id of the sensor
-        sensorMapping[2] = &secondSensor;
     }
 
     // get sensor by subject_id, returns reference to sensor
     // throws runtime_error if sensor not found
-    Sensor& getAt(int subject_id) {
+    template <typename T>
+    Sensor<T>& getAt(int subject_id) {
         try {
-            return *sensorMapping[subject_id];
+            return *static_cast<Sensor<T>*>(sensorMapping[subject_id]);
         } catch(const std::exception& e) { // sensor not found
             throw std::runtime_error("Sensor with subject_id " + std::to_string(subject_id) + " not found.");
         }

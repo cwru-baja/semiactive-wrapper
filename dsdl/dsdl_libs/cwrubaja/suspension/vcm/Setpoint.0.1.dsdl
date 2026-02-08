@@ -1,0 +1,6 @@
+# A specific Semi-Active Suspension valve setpoint.
+
+# the current to send to the valve
+uavcan.si.unit.electric_current.Scalar.1.0 current
+
+@extent 1 * 7 * 8 # takes up 1 CAN2.0B frames at most.

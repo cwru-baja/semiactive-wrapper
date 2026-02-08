@@ -71,13 +71,16 @@ public:
 
     // update sensors from ZMQ messages
     void updateSensorsFromZMQ() {
+        // {"subject_id": 578, "type":"uavcan.primitive.String_1_0", "value": "sup dood"}
+        // {"subject_id": 908, "type":"cwrubaja.suspension.vcm.Setpoint_0_2", "priority": 2, "current": {"ampere": 0.4}}
         auto messages = getAllUnreadZMQMessages(socket_in);
         if (messages.empty()) return; // no messages to process
         for (const auto& msg : messages) {
             try {
-                auto [subject_id, value] = parseSubjectAndValue(msg);
-                Sensor& sensor = sensors.getAt(subject_id);
-                sensor.value = value;
+                std::cout << msg << std::endl;
+                // auto [subject_id, value] = parseSubjectAndValue(msg);
+                // Sensor& sensor = sensors.getAt(subject_id);
+                // sensor.value = value;
             } catch (const std::exception& e) {
                 continue; // ignore malformed messages, or unknown subject_ids
             }
