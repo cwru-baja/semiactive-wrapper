@@ -4,7 +4,7 @@
 #include <mutex>
 #include <atomic>
 
-#include "CPP_DSDLs.hpp"
+#include "../dsdl/CPP_DSDLs.hpp"
 
 // SharedAlgorithmMemory can be edited in the "Utils.hpp" file
 // SharedAlgorithmMemory, ZMQSensorData, and ZMQOutput are all same object, shared between all wheels and al frames
