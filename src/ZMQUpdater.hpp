@@ -77,9 +77,9 @@ public:
         if (messages.empty()) return; // no messages to process
         for (const auto& msg : messages) {
             try {
-                auto json = nlohmann::json::parse(std::string(msg));
-
-                std::cout << json["subject_id"] << "  " << json["type"] << std::endl;
+                std::cout << msg << std::endl;
+                // auto json = nlohmann::json::parse(std::string(msg));
+                // std::cout << json["subject_id"] << "  " << json["type"] << std::endl;
                 // auto [subject_id, value] = parseSubjectAndValue(msg);
                 // Sensor& sensor = sensors.getAt(subject_id);
                 // sensor.value = value;
