@@ -77,7 +77,7 @@ public:
         if (messages.empty()) return; // no messages to process
         for (const auto& msg : messages) {
             try {
-                auto json = nlohmann::json::parse(msg);
+                auto json = nlohmann::json::parse(std::string(msg));
 
                 std::cout << json["subject_id"] << "  " << json["type"] << std::endl;
                 // auto [subject_id, value] = parseSubjectAndValue(msg);
