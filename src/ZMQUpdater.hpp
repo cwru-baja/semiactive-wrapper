@@ -2,6 +2,7 @@
 #include <vector>
 #include <thread>
 #include <regex>
+#include <cstdlib> // Required for atof
 
 // brew install nlohmann-json
 // sudo apt install nlohmann-json3-dev
@@ -57,18 +58,6 @@ public:
         return messages;
     }
 
-    // Then replace the parseSubjectAndValue function with:
-    std::pair<int, double> parseSubjectAndValue(const std::string& s) {
-        try {
-            auto json = nlohmann::json::parse(s);
-            int subject_id = json["subject_id"];
-            double value = json["value"];
-            return {subject_id, value};
-        } catch (const std::exception& e) {
-            throw std::runtime_error("Failed to parse JSON: " + std::string(e.what()));
-        }
-    }
-
     // update sensors from ZMQ messages
     void updateSensorsFromZMQ() {
         // {"subject_id": 578, "type":"uavcan.primitive.String_1_0", "value": "sup dood"}
@@ -77,13 +66,62 @@ public:
         if (messages.empty()) return; // no messages to process
         for (const auto& msg : messages) {
             try {
+                std::cout << "---------------" << std::endl;
                 std::cout << msg << std::endl;
-                // auto json = nlohmann::json::parse(std::string(msg));
-                // std::cout << json["subject_id"] << "  " << json["type"] << std::endl;
-                // auto [subject_id, value] = parseSubjectAndValue(msg);
-                // Sensor& sensor = sensors.getAt(subject_id);
-                // sensor.value = value;
+
+                auto json = nlohmann::json::parse(std::string(msg));
+
+                int subject_id = json["subject_id"];
+
+                Sensor& curret_sensor = sensors.getAt(subject_id);
+
+                for (auto& [key, value] : json.items()) {
+                    std::cout << key << " : " << value << std::endl;
+                    if (key == "subject_id" || key == "type") {
+                        continue;
+                    } else {
+
+                        std::any assgin_data;
+                        std::string values_str = value.dump();
+
+                        const std::string allowed_chars = "0123456789.,-";
+
+                        values_str.erase(
+                            std::remove_if(values_str.begin(), values_str.end(),
+                                [&](char c) {
+                                    return allowed_chars.find(c) == std::string::npos;
+                                }),
+                            values_str.end()
+                        );
+
+                        int comma_count = std::count(values_str.begin(), values_str.end(), ',');
+
+                        std::cout << values_str << std::endl;
+                        std::cout << comma_count << std::endl;
+
+                        if (values_str.length() == 0) {
+                            // this is data
+                            assgin_data = 0.0;
+
+                        } else if (comma_count == 0) {
+                            // this a scaler
+                            assgin_data = std::atof( values_str.c_str() );
+
+                        } else {
+                            // this is an array
+                            std::cout << "ARRAY!" << std::endl;
+                            assgin_data = -86.0;
+                        }
+
+                        curret_sensor.data_map[key] = assgin_data;
+
+                    };
+                };
+
+                std::cout << "---------------" << std::endl;
+
             } catch (const std::exception& e) {
+                std::cout << e.what() << std::endl;
                 continue; // ignore malformed messages, or unknown subject_ids
             }
         }
@@ -114,7 +152,7 @@ public:
             while (true) { // main loop
                 updateSensorsFromZMQ();
                 publishOutputToZMQ();
-                usleep(2500); // update every 2.5ms
+                usleep(100); // update every 2.5ms
             }
         } catch (const std::exception& e) { // fatal error in zmq updater, we are FRIED chat
             logger.log("ZMQUpdater", "ZMQUpdater encountered a fatal error: " + std::string(e.what()));

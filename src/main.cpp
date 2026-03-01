@@ -8,8 +8,6 @@
 #include "Logger.hpp"
 #include "Configs.hpp"
 
-#include "../dsdl/CPP_DSDLs.hpp"
-
 int main() {
 
     // shared algorithm memory object

@@ -3,11 +3,11 @@
 
 #include <iostream>
 #include <string>
+#include <any>
 #include <unordered_map>
 #include <string>
 
 #include "Configs.hpp"
-#include "../dsdl/CPP_DSDLs.hpp"
 
 
 // a shared memory structure for algorithms
@@ -24,39 +24,47 @@ struct SharedAlgorithmMemory {
 // DONT MODIFY BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING
 // -----------------------------------------------------------------
 
-// a sensor data structure
-template <typename T>
-struct Sensor {
-    T data_object; // placeholder for data type info
-    const short       subject_id;
-    const std::string name;
 
-    // constructors
-    Sensor(short sbj_id, T data_type, std::string sensor_name) : subject_id(sbj_id), data_object(data_type), name(sensor_name) {}
+struct Sensor {
+    short subject_id;
+    std::string name;
+    std::unordered_map<std::string, std::any> data_map;
+
+    Sensor(short subject_id, std::string name) : subject_id(subject_id), name(name) {};
+
+    template <typename T>
+    T getData(std::string key) {
+        try {
+            return std::any_cast<T>(data_map[key]);
+        } catch (const std::bad_any_cast& e) {
+            std::cout << "Caught exception: " << e.what() << std::endl;
+            return T{};
+        }
+
+    }
 };
 
 // ZMQ sensor data container
 // holds all sensors in a map and provides access by subject_id
 // all available sensors are a member of this struct
 struct ZMQSensorData {
-    // demo sensors
-    Sensor<uavcan_si_sample_magnetic_flux_density_Scalar_1_0> demoSensor {1, uavcan_si_sample_magnetic_flux_density_Scalar_1_0(), "Demo"};
 
-    std::unordered_map<int, void*> sensorMapping;
+    Sensor demo_scaler_sensor = {1, "Demo Scaler Sensor"};
+    Sensor demo_array_sensor =  {2, "Demo Array Sensor"};
 
-    ZMQSensorData() { // map subject_ids to sensor pointers
-        sensorMapping[1] = &demoSensor; // map pos is the same as subject_id of the sensor
+    std::unordered_map<int, Sensor*> sensor_mapping;
+
+    ZMQSensorData() {
+        sensor_mapping[1] = &demo_scaler_sensor;
+        sensor_mapping[2] = &demo_array_sensor;
     }
 
-    // get sensor by subject_id, returns reference to sensor
-    // throws runtime_error if sensor not found
-    template <typename T>
-    Sensor<T>& getAt(int subject_id) {
-        try {
-            return *static_cast<Sensor<T>*>(sensorMapping[subject_id]);
-        } catch(const std::exception& e) { // sensor not found
-            throw std::runtime_error("Sensor with subject_id " + std::to_string(subject_id) + " not found.");
+    Sensor& getAt(int subject_id) {
+        auto it = sensor_mapping.find(subject_id);
+        if (it == sensor_mapping.end()) {
+            throw std::runtime_error("Sensor not found");
         }
+        return *(it->second);
     }
 };
 

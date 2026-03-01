@@ -1,8 +1,0 @@
-uavcan.time.SynchronizedTimestamp.1.0 timestamp
-
-uint16 rotary0
-uint16 rotary1
-float32 potentiometer
-bool toggle
-
-@sealed
