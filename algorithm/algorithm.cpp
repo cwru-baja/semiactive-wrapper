@@ -1,8 +1,6 @@
 #include <iostream>
 #include <unistd.h>
-#include <mutex>
 #include <vector>
-#include <atomic>
 
 #include "../src/Utils.hpp"
 
