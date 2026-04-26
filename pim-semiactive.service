@@ -1,0 +1,20 @@
+
+; on a new pi :
+; /home/baja/piM/semiactive-wrapper/setup.sh
+; /home/baja/piM/semiactive-wrapper/compile.sh
+; cp /home/baja/piM/semiactive-wrapper/pim-semiactive.service /etc/systemd/system/pim-semiactive.service
+; sudo systemctl daemon-reexec
+; sudo systemctl enable pim-semiactive
+; sudo systemctl start pim-semiactive
+
+
+[Unit]
+Description=BAJA SemiActive Suspension Manager
+After=network.target
+
+[Service]
+ExecStart=/home/baja/piM/semiactive-wrapper/run.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
