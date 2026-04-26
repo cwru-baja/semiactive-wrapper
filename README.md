@@ -1,9 +1,9 @@
 # Semiactive Suspension Wrapper
 
 Runtime wrapper for semi-active suspension control.  
-This process runs four wheel control loops, ingests sensor traffic over ZMQ, and publishes wheel setpoints over ZMQ.
+This process runs four wheel control loops, processes sensor traffic over ZMQ, and publishes wheel setpoints back out over ZMQ.
 
-For algorithm-specific docs and expectations, see [`algorithm/README.md`](algorithm/README.md).
+For algorithm-specific docs, see [`algorithm/README.md`](algorithm/README.md).
 
 ## Platform Support
 
@@ -40,7 +40,7 @@ For algorithm-specific docs and expectations, see [`algorithm/README.md`](algori
 - Runs the built binary after a successful compile.
 
 ### `pim-semiactive.service`
-- Systemd service unit for deploying the wrapper on a Pi.
+- Systemd service for deploying the wrapper on the Pi.
 - Runs `/home/baja/piM/semiactive-wrapper/run.sh`.
 - Configured to restart automatically.
 
