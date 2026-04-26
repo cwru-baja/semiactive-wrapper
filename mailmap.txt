@@ -1,3 +1,0 @@
-Max Lawton <max@lawtonnation.com> <198982749+Copilot@users.noreply.github.com>
-Max Lawton <max@lawtonnation.com> copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>
-Max Lawton <max@lawtonnation.com> Copilot <copilot@github.com>
