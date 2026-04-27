@@ -11,7 +11,9 @@ fi
 if [ -f "./build/SemiActiveWrapper" ]; then
     echo "Running Suspension Control System..."
     echo "-----------------------------"
-    ./build/SemiActiveWrapper
+    # make run reletive to this file, regardless of where the user is running it from
+    cd build
+    ./SemiActiveWrapper
 else
     echo "Build not found. Please run ./compile.sh first to build the project."
 fi
