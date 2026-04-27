@@ -4,7 +4,7 @@ import zmq
 def main() -> None:
     context: zmq.Context = zmq.Context()
     socket: zmq.Socket = context.socket(zmq.PUB)
-    socket.bind("ipc:///tmp/cyphal_out")
+    socket.bind("ipc:///tmp/cyphal_in")
     while True:
         message = input("message to send:")
         socket.send_string(message)
