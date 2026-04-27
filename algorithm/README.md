@@ -308,8 +308,8 @@ void update(int subject_id, SharedAlgorithmMemory& m, ZMQSensorData& s, ZMQOutpu
         setpoint = 0.0;
     }
 
-    if (setpoint > 20.0) {
-        setpoint = 20.0;
+    if (setpoint > 1.8) {
+        setpoint = 1.8;
     }
 
     o.setSetpoint(subject_id, setpoint);
