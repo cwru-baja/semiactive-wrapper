@@ -8,11 +8,11 @@ else
 fi
 
 # Check if the build exists
-if [ -f "./build/SemiActiveWrapper" ]; then
+if [ -f "$(dirname "$0")/../build/SemiActiveWrapper" ]; then
     echo "Running Suspension Control System..."
     echo "-----------------------------"
     # make run reletive to this file, regardless of where the user is running it from
-    cd ~/piM/semiactive-wrapper/build
+    cd "$(dirname "$0")/../build"
     ./SemiActiveWrapper
 else
     echo "Build not found. Please run ./compile.sh first to build the project."
