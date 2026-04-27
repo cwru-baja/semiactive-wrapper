@@ -154,11 +154,11 @@ std::vector<double> acceleration_vector =
 | Variable Name                     | ID   | Description                       | DSDL / Type                                  | Double Fields         | Double Vector Fields          |
 | --------------------------------- | ---- | --------------------------------- | -------------------------------------------- | --------------------- | ----------------------------- |
 | `angle_sensor`                    | 400  | Angle Sensor                      | `uavcan.si.sample.angle.Scalar.1.0`          | `radian`              |                               |
-| `location_sensor`                 | 480  | Location Sensor                   | `cwurbaja.navigation.location.0.1`           |                       |                               |
-| `velocity_sensor`                 | 481  | Velocity Sensor                   | `cwrubaja.navigation.velocity.0.1`           |                       |                               |
-| `acceleration_sensor`             | 482  | Acceleration Sensor               | `cwrubaja.navigation.acceleration.0.1`       |                       |                               |
-| `orientation_sensor`              | 483  | Spatial Orientation Sensor        | `cwrubaja.navigation.orientation.0.1`        |                       |                               |
-| `angular_velocity_sensor`         | 484  | Angular Velocity Sensor           | `cwrubaja.navigation.angular_velocity.0.1`   |                       |                               |
+| `location_sensor`                 | 480  | Location Sensor                   | `cwurbaja.navigation.location.0.1`           | `latitude_degrees`, `longitude_degrees`, `altitude` |             |
+| `velocity_sensor`                 | 481  | Velocity Sensor                   | `cwrubaja.navigation.velocity.0.1`           | `north`, `east`, `down` |                             |
+| `acceleration_sensor`             | 482  | Acceleration Sensor               | `cwrubaja.navigation.acceleration.0.1`       | `north`, `east`, `down` |                             |
+| `orientation_sensor`              | 483  | Spatial Orientation Sensor        | `cwrubaja.navigation.orientation.0.1`        | `north_degrees`, `east_degrees`, `down_degrees` |       |
+| `angular_velocity_sensor`         | 484  | Angular Velocity Sensor           | `cwrubaja.navigation.angular_velocity.0.1`   | `north_degrees_per_second`, `east_degrees_per_second`, `down_degrees_per_second` | |
 | `uncertainty_sensor`              | 485  | Uncertainty Sensor                | `cwrubaja.navigation.uncertainty.0.1`        |                       |                               |
 | `board_temperature_sensor`        | 499  | Board Temperature Sensor          | `cwrubaja.suspension.vcm.BoardTemperature_0_1` |                     |                               |
 | `suspension_mode_sensor`          | 670  | Suspension Mode Sensor            | `CUSTOM DSDL`                                |                       |                               |
@@ -175,7 +175,7 @@ std::vector<double> acceleration_vector =
 | `HFU_temperature_sensor`          | 999  | HFU Temperature Sensor            | `uavcan.si.sample.temperature.Scalar.1.0`    | `kelvin`              |                               |
 | `engine_output_rotation_sensor`   | 1000 | Engine Output Rotation Sensor     | `uavcan.si.sample.angular_velocity.Scalar.1.0` | `radian_per_second` |                               |
 | `gearbox_rotation_speed_sensor`   | 1001 | Gearbox Rotation Speed Sensor     | `uavcan.si.sample.angular_velocity.Scalar.1.0` | `radian_per_second` |                               |
-| `fuel_gauge_pressure_sensor`      | 1002 | Fuel Gauge Pressure Sensor        | `uavcan.si.sample.pressure.Scalar.1.0`       | `pascal`              |                               |
+| `fuel_gauge_pressure_sensor`      | 1002 | Fuel Gauge Pressure Sensor        |        | `volt`              |                               |
 | `acceleration_vector_sensor`      | 1003 | Acceleration Vector Sensor        | `uavcan.si.sample.acceleration.Vector3.1.0`  |                       | `meter_per_second_per_second` |
 | `time_sync`                       | 7168 | Time Sync                         | `uavcan.time.Synchronization.1.0`            | `microsecond`         |                               |
 

@@ -112,6 +112,8 @@ public:
         // {"subject_id": 578, "type":"uavcan.primitive.String_1_0", "value": "sup dood"}
         // {"subject_id": 908, "type":"cwrubaja.suspension.vcm.Setpoint_0_2", "priority": 2, "current": {"ampere": 0.4}}
         // {"timestamp": {"microsecond": 0}, "radian_per_second": 2.501599205562144e-10, "subject_id": 1000}
+        // {"latitude_degrees": 0.0, "longitude_degrees": 0.0, "altitude": {"meter": 0.0}, "subject_id": 480}
+
 
         // Read every queued message this cycle.
         auto messages = getAllUnreadZMQMessages(socket_in);
@@ -189,7 +191,6 @@ public:
 
         // Required downstream payload shape:
         // '{"priority": 2, "type":"cwrubaja.suspension.vcm.Setpoint.0.2", "current": {"ampere": 67.0}, "subject_id": 127}'
-        // {"latitude_degrees": 0.0, "longitude_degrees": 0.0, "altitude": {"meter": 0.0}, "subject_id": 480}
 
         // Format helper for one wheel setpoint packet.
         auto format = [](int sub_id, double setpoint) {
