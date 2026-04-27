@@ -48,6 +48,9 @@ void update(int subject_id, SharedAlgorithmMemory& m, ZMQSensorData& s, ZMQOutpu
         // std::cout << "    longitude: " << s.location_sensor.getData<double>("longitude_degrees") << std::endl;
         // std::cout << "    altitude: " << s.location_sensor.getData<double>("altitude") << std::endl;
 
+        // angle sensor example:
+        std::cout << "\nangle: " << s.angular_velocity_sensor.getData<double>("north_degrees_per_second") << " rad/s" << std::endl;
+
         o.setSetpoint(subject_id, s.engine_output_rotation_sensor.getData<double>("radian_per_second")*1e10);
 }
 
