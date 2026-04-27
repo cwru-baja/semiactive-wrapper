@@ -34,6 +34,11 @@ void update(int subject_id, SharedAlgorithmMemory& m, ZMQSensorData& s, ZMQOutpu
     
         usleep(1000); // Simulate algorithm runtime
 
+        std::cout << "location: " << std::endl;
+        std::cout << "    lat: " << s.location_sensor.getData<double>("latitude_degrees") << std::endl;
+        std::cout << "    lon: " << s.location_sensor.getData<double>("longitude_degrees") << std::endl;
+        std::cout << "    alt: " << s.location_sensor.getData<double>("longitude_degrees") << std::endl;
+
         o.setSetpoint(subject_id, s.engine_output_rotation_sensor.getData<double>("radian_per_second")*1e10);
 }
 

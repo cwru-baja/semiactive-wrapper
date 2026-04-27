@@ -189,6 +189,7 @@ public:
 
         // Required downstream payload shape:
         // '{"priority": 2, "type":"cwrubaja.suspension.vcm.Setpoint.0.2", "current": {"ampere": 67.0}, "subject_id": 127}'
+        // {"latitude_degrees": 0.0, "longitude_degrees": 0.0, "altitude": {"meter": 0.0}, "subject_id": 480}
 
         // Format helper for one wheel setpoint packet.
         auto format = [](int sub_id, double setpoint) {
