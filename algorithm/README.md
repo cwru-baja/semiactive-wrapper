@@ -262,7 +262,7 @@ void update(int subject_id, SharedAlgorithmMemory& m, ZMQSensorData& s, ZMQOutpu
 
 ### Example 4: Clamp Setpoint to a Safe Range
 
-This example ensures the commanded setpoint stays within a safe range.
+Ensure the setpoint stays within a safe range (1.8 amps max).
 
 ```cpp
 double setpoint = 12.7;
@@ -271,8 +271,9 @@ if (setpoint < 0.0) {
     setpoint = 0.0;
 }
 
-if (setpoint > 20.0) {
-    setpoint = 20.0;
+// 1.8 max current
+if (setpoint > 1.8) {
+    setpoint = 1.8;
 }
 
 o.setSetpoint(subject_id, setpoint);
