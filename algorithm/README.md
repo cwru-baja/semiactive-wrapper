@@ -151,33 +151,33 @@ std::vector<double> acceleration_vector =
 
 ### Available Sensors
 
-| Variable Name                     | ID   | Description                       | DSDL / Type                                  | Fields |
-| --------------------------------- | ---- | --------------------------------- | -------------------------------------------- | ------ |
-| `angle_sensor`                      | 400  | Angle Sensor                      | `uavcan.si.sample.angle.Scalar.1.0`            | null   |
-| `location_sensor`                   | 480  | Location Sensor                   | `cwurbaja.navigation.location.0.1`             | null   |
-| `velocity_sensor`                   | 481  | Velocity Sensor                   | `cwrubaja.navigation.velocity.0.1`             | null   |
-| `acceleration_sensor`               | 482  | Acceleration Sensor               | `cwrubaja.navigation.acceleration.0.1`         | null   |
-| `orientation_sensor`                | 483  | Spatial Orientation Sensor        | `cwrubaja.navigation.orientation.0.1`          | null   |
-| `angular_velocity_sensor`           | 484  | Angular Velocity Sensor           | `cwrubaja.navigation.angular_velocity.0.1`     | null   |
-| `uncertainty_sensor`                | 485  | Uncertainty Sensor                | `cwrubaja.navigation.uncertainty.0.1`          | null   |
-| `board_temperature_sensor`          | 499  | Board Temperature Sensor          | `cwrubaja.suspension.vcm.BoardTemperature_0_1` | null   |
-| `suspension_mode_sensor`            | 670  | Suspension Mode Sensor            | `CUSTOM DSDL`                                  | null   |
-| `backup_fl_setpoint_sensor`         | 680  | Front Left Setpoint Sensor        | `cwrubaja.suspension.vcm.Setpoint_0_2`         | null   |
-| `backup_fr_setpoint_sensor`         | 681  | Front Right Setpoint Sensor       | `cwrubaja.suspension.vcm.Setpoint_0_2`         | null   |
-| `backup_bl_setpoint_sensor`         | 682  | Back Left Setpoint Sensor         | `cwrubaja.suspension.vcm.Setpoint_0_2`         | null   |
-| `backup_br_setpoint_sensor`         | 683  | Back Right Setpoint Sensor        | `cwrubaja.suspension.vcm.Setpoint_0_2`         | null   |
-| `steering_wheel_temperature_sensor` | 679  | Steering Wheel Temperature Sensor | `uavcan.si.sample.temperature.Scalar.1.0`      | null   |
-| `strain_sensor`                     | 700  | Strain Sensor                     | `CUSTOM DSDL`                                  | null   |
-| `fl_rotation_speed_sensor`          | 990  | Front Left Rotation Speed Sensor  | `uavcan.si.sample.angular_velocity.Scalar.1.0` | null   |
-| `fr_rotation_speed_sensor`          | 991  | Front Right Rotation Speed Sensor | `uavcan.si.sample.angular_velocity.Scalar.1.0` | null   |
-| `front_brake_pressure_sensor`       | 992  | Front Brake Pressure Sensor       | `uavcan.si.sample.pressure.Scalar.1.0`         | null   |
-| `rear_brake_pressure_sensor`        | 993  | Rear Brake Pressure Sensor        | `uavcan.si.sample.pressure.Scalar.1.0`         | null   |
-| `HFU_temperature_sensor`            | 999  | HFU Temperature Sensor            | `uavcan.si.sample.temperature.Scalar.1.0`      | null   |
-| `engine_output_rotation_sensor`     | 1000 | Engine Output Rotation Sensor     | `uavcan.si.sample.angular_velocity.Scalar.1.0` | null   |
-| `gearbox_rotation_speed_sensor`     | 1001 | Gearbox Rotation Speed Sensor     | `uavcan.si.sample.angular_velocity.Scalar.1.0` | null   |
-| `fuel_gauge_pressure_sensor`        | 1002 | Fuel Gauge Pressure Sensor        | `uavcan.si.sample.pressure.Scalar.1.0`         | null   |
-| `acceleration_vector_sensor`        | 1003 | Acceleration Vector Sensor        | `uavcan.si.sample.acceleration.Vector3.1.0`    | null   |
-| `time_sync`                         | 7168 | Time Sync                         | `uavcan.time.Synchronization.1.0`              | null   |
+| Variable Name                     | ID   | Description                       | DSDL / Type                                  | Double Fields         | Double Vector Fields          |
+| --------------------------------- | ---- | --------------------------------- | -------------------------------------------- | --------------------- | ----------------------------- |
+| `angle_sensor`                    | 400  | Angle Sensor                      | `uavcan.si.sample.angle.Scalar.1.0`          | `radian`              |                               |
+| `location_sensor`                 | 480  | Location Sensor                   | `cwurbaja.navigation.location.0.1`           |                       |                               |
+| `velocity_sensor`                 | 481  | Velocity Sensor                   | `cwrubaja.navigation.velocity.0.1`           |                       |                               |
+| `acceleration_sensor`             | 482  | Acceleration Sensor               | `cwrubaja.navigation.acceleration.0.1`       |                       |                               |
+| `orientation_sensor`              | 483  | Spatial Orientation Sensor        | `cwrubaja.navigation.orientation.0.1`        |                       |                               |
+| `angular_velocity_sensor`         | 484  | Angular Velocity Sensor           | `cwrubaja.navigation.angular_velocity.0.1`   |                       |                               |
+| `uncertainty_sensor`              | 485  | Uncertainty Sensor                | `cwrubaja.navigation.uncertainty.0.1`        |                       |                               |
+| `board_temperature_sensor`        | 499  | Board Temperature Sensor          | `cwrubaja.suspension.vcm.BoardTemperature_0_1` |                     |                               |
+| `suspension_mode_sensor`          | 670  | Suspension Mode Sensor            | `CUSTOM DSDL`                                |                       |                               |
+| `backup_fl_setpoint_sensor`       | 680  | Front Left Setpoint Sensor        | `cwrubaja.suspension.vcm.Setpoint_0_2`       |                       |                               |
+| `backup_fr_setpoint_sensor`       | 681  | Front Right Setpoint Sensor       | `cwrubaja.suspension.vcm.Setpoint_0_2`       |                       |                               |
+| `backup_bl_setpoint_sensor`       | 682  | Back Left Setpoint Sensor         | `cwrubaja.suspension.vcm.Setpoint_0_2`       |                       |                               |
+| `backup_br_setpoint_sensor`       | 683  | Back Right Setpoint Sensor        | `cwrubaja.suspension.vcm.Setpoint_0_2`       |                       |                               |
+| `steering_wheel_temperature_sensor` | 679 | Steering Wheel Temperature Sensor | `uavcan.si.sample.temperature.Scalar.1.0`    | `kelvin`              |                               |
+| `strain_sensor`                   | 700  | Strain Sensor                     | `CUSTOM DSDL`                                |                       |                               |
+| `fl_rotation_speed_sensor`        | 990  | Front Left Rotation Speed Sensor  | `uavcan.si.sample.angular_velocity.Scalar.1.0` | `radian_per_second` |                               |
+| `fr_rotation_speed_sensor`        | 991  | Front Right Rotation Speed Sensor | `uavcan.si.sample.angular_velocity.Scalar.1.0` | `radian_per_second` |                               |
+| `front_brake_pressure_sensor`     | 992  | Front Brake Pressure Sensor       | `uavcan.si.sample.pressure.Scalar.1.0`       | `pascal`              |                               |
+| `rear_brake_pressure_sensor`      | 993  | Rear Brake Pressure Sensor        | `uavcan.si.sample.pressure.Scalar.1.0`       | `pascal`              |                               |
+| `HFU_temperature_sensor`          | 999  | HFU Temperature Sensor            | `uavcan.si.sample.temperature.Scalar.1.0`    | `kelvin`              |                               |
+| `engine_output_rotation_sensor`   | 1000 | Engine Output Rotation Sensor     | `uavcan.si.sample.angular_velocity.Scalar.1.0` | `radian_per_second` |                               |
+| `gearbox_rotation_speed_sensor`   | 1001 | Gearbox Rotation Speed Sensor     | `uavcan.si.sample.angular_velocity.Scalar.1.0` | `radian_per_second` |                               |
+| `fuel_gauge_pressure_sensor`      | 1002 | Fuel Gauge Pressure Sensor        | `uavcan.si.sample.pressure.Scalar.1.0`       | `pascal`              |                               |
+| `acceleration_vector_sensor`      | 1003 | Acceleration Vector Sensor        | `uavcan.si.sample.acceleration.Vector3.1.0`  |                       | `meter_per_second_per_second` |
+| `time_sync`                       | 7168 | Time Sync                         | `uavcan.time.Synchronization.1.0`            | `microsecond`         |                               |
 
 [Sensor layout follows this spreadsheet, as of April 26, 2026.](https://docs.google.com/spreadsheets/d/16xAuAx4oVbkvDQc-R2Hv2Mh6TtUhUXnPfViXBfL-QDQ/edit)
 
