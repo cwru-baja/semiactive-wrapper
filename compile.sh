@@ -37,7 +37,8 @@ c++ -std=c++17 \
 if [ $? -eq 0 ]; then
     echo "Build complete. Running..."
     echo "-----------------------------"
-    ./build/SemiActiveWrapper
+    # ./build/SemiActiveWrapper
+    sudo systemctl restart pim-semiactive
 else
     echo "Build failed. Please check for errors above."
 fi
