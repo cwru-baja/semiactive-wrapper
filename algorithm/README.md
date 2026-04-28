@@ -280,6 +280,10 @@ if (setpoint > 1.8) {
 
 o.setSetpoint(subject_id, setpoint);
 ```
+or
+```cpp
+setpoint = std::clamp(setpoint, 0.0, 1.8);
+```
 
 ### Example 5: Basic update() Control Flow
 

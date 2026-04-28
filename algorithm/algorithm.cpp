@@ -45,9 +45,8 @@ void update(int subject_id, SharedAlgorithmMemory& m, ZMQSensorData& s, ZMQOutpu
         // get setpoint based on engine rpm and brake pressure
         double setpoint = s.engine_output_rotation_sensor.getData<double>("radian_per_second")*1e10 + brake_pressure;
 
-        // 1.8 amps max
-        if      (setpoint < 0.0) setpoint = 0.0;
-        else if (setpoint > 1.8) setpoint = 1.8;
+        // clamp
+        setpoint = std::clamp(setpoint, 0.0, 1.8);
 
         o.setSetpoint(subject_id, setpoint);
 }
