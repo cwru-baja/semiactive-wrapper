@@ -1,6 +1,6 @@
 # Algorithm Docs
 
-**Note:** The wrapper will start automatically with the last built algorithm. To change algorithms, update the `algorithm.cpp` file and run `./compile.sh`. This will automatically restart the `pim-semiactive` systemctl service, assuming the build is successful. 
+**Note:** The wrapper will start automatically with the last built algorithm. To change algorithms, update the `algorithm.cpp` file and run `./compile.sh`. This will automatically restart the `pim-semiactive` systemctl service, assuming the build was successful. 
 
 ## Table of Contents
 - [Overview](#overview)
